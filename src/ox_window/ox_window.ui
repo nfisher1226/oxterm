@@ -23,6 +23,10 @@
     </section>
     <section>
       <item>
+        <attribute name="label">Close Tab</attribute>
+	<attribute name="action">win.close_tab</attribute>
+      </item>
+      <item>
         <attribute name="label">Quit</attribute>
         <attribute name="action">win.quit</attribute>
       </item>

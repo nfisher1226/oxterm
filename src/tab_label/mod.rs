@@ -31,10 +31,7 @@ impl TabLabel {
         self.imp().label.set_label(label);
     }
 
-    pub fn connect_close_clicked<F: Fn(&Self) + 'static>(
-        &self,
-        f: F,
-    ) -> glib::SignalHandlerId {
+    pub fn connect_close_clicked<F: Fn(&Self) + 'static>(&self, f: F) -> glib::SignalHandlerId {
         self.connect_local("close-clicked", true, move |values| {
             let obj = values[0].get::<Self>().unwrap();
             f(&obj);

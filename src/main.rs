@@ -1,4 +1,7 @@
-use gtk::{glib::{char::Char, OptionArg, OptionFlags}, prelude::*};
+use gtk::{
+    glib::{char::Char, OptionArg, OptionFlags},
+    prelude::*,
+};
 
 fn main() {
     let _matches = oxterm::cli::opts().get_matches();

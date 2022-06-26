@@ -3,9 +3,12 @@
   <template class="TabLabel" parent="GtkBox">
     <property name="orientation">vertical</property>
     <property name="halign">fill</property>
+    <property name="hexpand">1</property>
     <child>
       <object class="GtkLabel" id="label">
         <property name="label">OxTerm:blank</property>
+	<property name="halign">fill</property>
+        <property name="hexpand">1</property>
       </object>
     </child>
     <child>

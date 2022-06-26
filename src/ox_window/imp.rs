@@ -1,4 +1,3 @@
-
 use {
     crate::Tab,
     gtk::{
@@ -19,7 +18,7 @@ pub struct OxWindow {
     pub new_tab_button: TemplateChild<gtk::Button>,
     #[template_child]
     pub menu_button: TemplateChild<gtk::MenuButton>,
-    pub tabs: RefCell<HashMap<String, Tab>>
+    pub tabs: RefCell<HashMap<String, Tab>>,
 }
 
 #[glib::object_subclass]

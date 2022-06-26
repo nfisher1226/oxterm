@@ -1,6 +1,9 @@
 use {
     gtk::{
-        glib::{self, subclass::{InitializingObject, Signal}},
+        glib::{
+            self,
+            subclass::{InitializingObject, Signal},
+        },
         prelude::*,
         subclass::prelude::*,
         CompositeTemplate,
@@ -43,14 +46,7 @@ impl ObjectImpl for TabLabel {
 
     fn signals() -> &'static [Signal] {
         static SIGNALS: Lazy<Vec<Signal>> = Lazy::new(|| {
-            vec![
-                Signal::builder(
-                    "close-clicked",
-                    &[],
-                    <()>::static_type().into(),
-                )
-                .build()
-            ]
+            vec![Signal::builder("close-clicked", &[], <()>::static_type().into()).build()]
         });
         SIGNALS.as_ref()
     }

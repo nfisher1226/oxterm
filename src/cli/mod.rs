@@ -10,21 +10,20 @@ pub fn opts() -> Command<'static> {
                 .help("A command to run instead of an interactive shell")
                 .short('e')
                 .long("command")
-                .takes_value(true)
+                .takes_value(true),
         )
         .arg(
             Arg::new("title")
                 .help("The title for the window")
                 .short('t')
                 .long("title")
-                .takes_value(true)
+                .takes_value(true),
         )
         .arg(
             Arg::new("directory")
                 .help("Set the working directory")
                 .short('w')
                 .long("directory")
-                .takes_value(true)
+                .takes_value(true),
         )
 }
-
