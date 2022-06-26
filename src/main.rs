@@ -1,4 +1,5 @@
 use gtk::{
+    gio::Cancellable,
     glib::{char::Char, OptionArg, OptionFlags},
     prelude::*,
 };
@@ -33,6 +34,9 @@ fn main() {
         "",
         None,
     );
+    if let Err(e) = app.register(Some(&Cancellable::new())) {
+        eprintln!("{e}");
+    }
     app.connect_activate(move |app| {
         let _gui = oxterm::build_ui(app);
     });
