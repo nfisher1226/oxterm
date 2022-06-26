@@ -2,7 +2,7 @@ use {
     crate::TabLabel,
     gtk::{glib, subclass::prelude::*},
     std::{cell::RefCell, collections::HashMap},
-    vte4::Terminal,
+    vte::Terminal,
 };
 
 #[derive(Default)]
