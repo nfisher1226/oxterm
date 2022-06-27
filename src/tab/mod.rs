@@ -25,14 +25,6 @@ impl Default for Tab {
 }
 
 impl Tab {
-    pub fn label(&self) -> TabLabel {
-        self.imp().label.clone()
-    }
-
-    pub fn terms(&self) -> RefCell<HashMap<String, Terminal>> {
-        self.imp().terms.clone()
-    }
-
     pub fn new() -> Self {
         let name: String = std::iter::repeat_with(fastrand::alphanumeric)
             .take(10)
@@ -52,6 +44,14 @@ impl Tab {
             .borrow_mut()
             .insert(term.widget_name().to_string(), term.clone());
         tab
+    }
+
+    pub fn label(&self) -> TabLabel {
+        self.imp().label.clone()
+    }
+
+    pub fn terms(&self) -> RefCell<HashMap<String, Terminal>> {
+        self.imp().terms.clone()
     }
 
     pub fn new_term() -> Terminal {
@@ -74,5 +74,32 @@ impl Tab {
             None,
         );
         term
+    }
+
+    pub fn split(&self, orientation: Option<gtk::Orientation>) {
+        let len = { self.imp().terms.borrow().iter().len() };
+        match len {
+            1 => self.first_split(orientation),
+            _ => {}
+        }
+    }
+
+    fn first_split(&self, orientation: Option<gtk::Orientation>) {
+        let mut terms = self.imp().terms.borrow_mut();
+        let term0 = terms.values().next().unwrap().clone();
+        self.remove(&term0);
+        let term1 = Self::new_term();
+        terms.insert(term1.widget_name().to_string(), term1.clone());
+        let orientation = match orientation {
+            Some(o) => o,
+            None => gtk::Orientation::Horizontal,
+        };
+        let paned = gtk::Paned::builder()
+            .orientation(orientation)
+            .start_child(&term0)
+            .end_child(&term1)
+            .build();
+        self.append(&paned);
+        paned.show();
     }
 }

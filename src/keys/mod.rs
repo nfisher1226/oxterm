@@ -30,6 +30,8 @@ impl Keys {
             "close_tab" => "<primary><Shift>W",
             "next_tab" => "<primary>Page_Down",
             "prev_tab" => "<primary>Page_Up",
+            "split_horizontal" => "<primary><Shift>Return",
+            "split_vertical" => "<Alt>Return",
             "tab1" => "<Alt>1",
             "tab2" => "<Alt>2",
             "tab3" => "<Alt>3",

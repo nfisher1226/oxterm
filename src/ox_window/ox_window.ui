@@ -10,6 +10,14 @@
         <attribute name="label">New Window</attribute>
         <attribute name="action">win.new_window</attribute>
       </item>
+      <item>
+        <attribute name="label">Split Horizontal</attribute>
+	<attribute name="action">win.split_horizontal</attribute>
+      </item>
+      <item>
+        <attribute name="label">Split Vertical</attribute>
+	<attribute name="action">win.split_vertical</attribute>
+      </item>
     </section>
     <section>
       <item>
@@ -50,40 +58,13 @@
             <property name="scrollable">1</property>
             <property name="show-tabs">1</property>
             <child type="action-end">
-              <object class="GtkBox">
-                <property name="orientation">horizontal</property>
-                <property name="margin-top">3</property>
-                <property name="margin-bottom">3</property>
-                <property name="margin-start">3</property>
-                <property name="margin-end">3</property>
+              <object id="menu_button" class="GtkMenuButton">
+                <property name="tooltip-text">Open application menu</property>
+		<property name="has-frame">0</property>
+                <property name="menu-model">actionMenu</property>
                 <child>
-                  <object id="new_tab_button" class="GtkButton">
-                    <property name="margin-top">3</property>
-                    <property name="margin-bottom">3</property>
-                    <property name="margin-start">3</property>
-                    <property name="margin-end">3</property>
-                    <property name="tooltip-text">New tab</property>
-                    <property name="action-name">win.new_tab</property>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="icon-name">tab-new-symbolic</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object id="menu_button" class="GtkMenuButton">
-                    <property name="margin-top">3</property>
-                    <property name="margin-bottom">3</property>
-                    <property name="margin-start">3</property>
-                    <property name="margin-end">3</property>
-                    <property name="tooltip-text">Open application menu</property>
-                    <property name="menu-model">actionMenu</property>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="icon-name">open-menu-symbolic</property>
-                      </object>
-                    </child>
+                  <object class="GtkImage">
+                    <property name="icon-name">open-menu-symbolic</property>
                   </object>
                 </child>
               </object>

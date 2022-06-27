@@ -9,11 +9,13 @@ use {
     std::rc::Rc,
 };
 
-const ACTIONS: [&str; 17] = [
+const ACTIONS: [&str; 19] = [
     "new_tab",
     "close_tab",
     "next_tab",
     "prev_tab",
+    "split_horizontal",
+    "split_vertical",
     "tab1",
     "tab2",
     "tab3",
@@ -54,6 +56,20 @@ pub fn add(window: &Rc<OxWindow>, app: &gtk::Application) {
             "prev_tab" => {
                 action.connect_activate(clone!(@weak window => move |_,_| {
                     window.prev_tab();
+                }));
+            }
+            "split_horizontal" => {
+                action.connect_activate(clone!(@weak window => move |_,_| {
+                    if let Some(tab) = window.current_tab() {
+                        tab.split(Some(gtk::Orientation::Horizontal));
+                    }
+                }));
+            }
+            "split_vertical" => {
+                action.connect_activate(clone!(@weak window => move |_,_| {
+                    if let Some(tab) = window.current_tab() {
+                        tab.split(Some(gtk::Orientation::Vertical));
+                    }
                 }));
             }
             "tab1" => {

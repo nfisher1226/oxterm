@@ -20,3 +20,6 @@ the future development of the codebase.
     - [ ] Images
     - [ ] Transparency
 - [x] User configurable keybindings
+## Currently Broken
+- Can only split once
+- Can't close open terminals

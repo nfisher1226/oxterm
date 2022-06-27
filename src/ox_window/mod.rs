@@ -57,7 +57,7 @@ impl OxWindow {
         self.imp().notebook.current_page()
     }
 
-    fn current_tab(&self) -> Option<Tab> {
+    pub fn current_tab(&self) -> Option<Tab> {
         if let Some(t) = self.imp().notebook.nth_page(self.current_page()) {
             self.imp()
                 .tabs
