@@ -76,11 +76,31 @@ impl Tab {
         term
     }
 
+    pub fn current_term(&self) -> Option<Terminal> {
+        for term in self.imp().terms.borrow().values() {
+            if term.has_focus() {
+                return Some(term.clone());
+            }
+        }
+        None
+    }
+
+    fn current_term_parent(&self) -> Option<(Terminal, gtk::Paned)> {
+        if let Some(term) = self.current_term() {
+            if let Some(paned) = term.parent() {
+                if let Ok(paned) = paned.downcast::<gtk::Paned>() {
+                    return Some((term, paned));
+                }
+            }
+        }
+        None
+    }
+
     pub fn split(&self, orientation: Option<gtk::Orientation>) {
         let len = { self.imp().terms.borrow().iter().len() };
         match len {
             1 => self.first_split(orientation),
-            _ => {}
+            _ => self.split_again(orientation),
         }
     }
 
@@ -101,5 +121,53 @@ impl Tab {
             .build();
         self.append(&paned);
         paned.show();
+    }
+
+    fn split_again(&self, orientation: Option<gtk::Orientation>) {
+        if let Some((term0, paned0)) = self.current_term_parent() {
+            let child1 = paned0.start_child();
+            let child2 = paned0.end_child();
+            let term1 = Self::new_term();
+            match (child1, child2) {
+                (Some(_), None) => {
+                    paned0.set_end_child(Some(&term1));
+                    orientation.map(|o| paned0.set_orientation(o));
+                },
+                (None, Some(_)) => {
+                    paned0.set_start_child(Some(&term1));
+                    orientation.map(|o| paned0.set_orientation(o));
+                },
+                (Some(t0), Some(t1)) => {
+                    match term0.widget_name().as_str() {
+                        s if s == t0.widget_name().as_str() => {
+                            let ch: Option<&gtk::Widget> = None;
+                            paned0.set_start_child(ch);
+                            let paned1 = gtk::Paned::builder()
+                                .orientation(orientation.unwrap_or(gtk::Orientation::Horizontal))
+                                .start_child(&t0)
+                                .end_child(&term1)
+                                .build();
+                            paned0.set_start_child(Some(&paned1));
+                            paned1.show();
+                            t0.grab_focus();
+                        },
+                        s if s == t1.widget_name().as_str() => {
+                            let ch: Option<&gtk::Widget> = None;
+                            paned0.set_end_child(ch);
+                            let paned1 = gtk::Paned::builder()
+                                .orientation(orientation.unwrap_or(gtk::Orientation::Horizontal))
+                                .start_child(&t1)
+                                .end_child(&term1)
+                                .build();
+                            paned0.set_end_child(Some(&paned1));
+                            paned1.show();
+                            t1.grab_focus();
+                        },
+                        _ => {},
+                    }
+                },
+                (None, None) => {},
+            }
+        }
     }
 }

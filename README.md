@@ -10,7 +10,7 @@ Zterm is definitely sub-optimal in a number of areas which lead to challenges in
 the future development of the codebase.
 ## Planned Features
 - [x] Tabbed interface
-- [ ] Flexible split tabs
+- [x] Flexible split tabs
 - [ ] Theming
   - [ ] Fonts
   - [ ] Colors
@@ -21,5 +21,10 @@ the future development of the codebase.
     - [ ] Transparency
 - [x] User configurable keybindings
 ## Currently Broken
-- Can only split once
-- Can't close open terminals
+- Can't close open terminals (can close entire tabs though)
+- Can't open more than one additional pane from menu, only via shortcut keys
+  - Instead of looking to see which terminal has focus at that exact moment, need
+    to store the current terminal name as a property of Tab widget, so that it
+    is retrievable when the menu has focus. Needs to be updated whenever switching
+    panes. Bonus - this will allow the last focused terminal in each tab to grab
+    focus when switching tabs.
