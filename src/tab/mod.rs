@@ -25,6 +25,7 @@ impl Default for Tab {
 }
 
 impl Tab {
+    #[must_use]
     pub fn new() -> Self {
         let name: String = std::iter::repeat_with(fastrand::alphanumeric)
             .take(10)
@@ -42,18 +43,21 @@ impl Tab {
         tab.imp()
             .terms
             .borrow_mut()
-            .insert(term.widget_name().to_string(), term.clone());
+            .insert(term.widget_name().to_string(), term);
         tab
     }
 
+    #[must_use]
     pub fn label(&self) -> TabLabel {
         self.imp().label.clone()
     }
 
+    #[must_use]
     pub fn terms(&self) -> RefCell<HashMap<String, Terminal>> {
         self.imp().terms.clone()
     }
 
+    #[must_use]
     pub fn new_term() -> Terminal {
         let term = Terminal::new();
         let name: String = std::iter::repeat_with(fastrand::alphanumeric)
@@ -76,6 +80,7 @@ impl Tab {
         term
     }
 
+    #[must_use]
     pub fn current_term(&self) -> Option<Terminal> {
         for term in self.imp().terms.borrow().values() {
             if term.has_focus() {
@@ -106,18 +111,20 @@ impl Tab {
 
     fn first_split(&self, orientation: Option<gtk::Orientation>) {
         let mut terms = self.imp().terms.borrow_mut();
-        let term0 = terms.values().next().unwrap().clone();
-        self.remove(&term0);
-        let term1 = Self::new_term();
-        terms.insert(term1.widget_name().to_string(), term1.clone());
+        let old_term = terms.values().next().unwrap().clone();
+        self.remove(&old_term);
+        let new_term = Self::new_term();
+        terms.insert(new_term.widget_name().to_string(), new_term.clone());
         let orientation = match orientation {
             Some(o) => o,
             None => gtk::Orientation::Horizontal,
         };
         let paned = gtk::Paned::builder()
             .orientation(orientation)
-            .start_child(&term0)
-            .end_child(&term1)
+            .halign(gtk::Align::Fill)
+            .hexpand(true)
+            .start_child(&old_term)
+            .end_child(&new_term)
             .build();
         self.append(&paned);
         paned.show();
@@ -131,42 +138,52 @@ impl Tab {
             match (child1, child2) {
                 (Some(_), None) => {
                     paned0.set_end_child(Some(&term1));
-                    orientation.map(|o| paned0.set_orientation(o));
-                },
+                    if let Some(o) = orientation {
+                        paned0.set_orientation(o);
+                    }
+                }
                 (None, Some(_)) => {
                     paned0.set_start_child(Some(&term1));
-                    orientation.map(|o| paned0.set_orientation(o));
-                },
-                (Some(t0), Some(t1)) => {
-                    match term0.widget_name().as_str() {
-                        s if s == t0.widget_name().as_str() => {
-                            let ch: Option<&gtk::Widget> = None;
-                            paned0.set_start_child(ch);
-                            let paned1 = gtk::Paned::builder()
-                                .orientation(orientation.unwrap_or(gtk::Orientation::Horizontal))
-                                .start_child(&t0)
-                                .end_child(&term1)
-                                .build();
-                            paned0.set_start_child(Some(&paned1));
-                            paned1.show();
-                            t0.grab_focus();
-                        },
-                        s if s == t1.widget_name().as_str() => {
-                            let ch: Option<&gtk::Widget> = None;
-                            paned0.set_end_child(ch);
-                            let paned1 = gtk::Paned::builder()
-                                .orientation(orientation.unwrap_or(gtk::Orientation::Horizontal))
-                                .start_child(&t1)
-                                .end_child(&term1)
-                                .build();
-                            paned0.set_end_child(Some(&paned1));
-                            paned1.show();
-                            t1.grab_focus();
-                        },
-                        _ => {},
+                    if let Some(o) = orientation {
+                        paned0.set_orientation(o);
                     }
+                }
+                (Some(t0), Some(t1)) => match term0.widget_name().as_str() {
+                    s if s == t0.widget_name().as_str() => {
+                        let pos = paned0.position();
+                        let ch: Option<&gtk::Widget> = None;
+                        paned0.set_start_child(ch);
+                        let paned1 = gtk::Paned::builder()
+                            .orientation(orientation.unwrap_or(gtk::Orientation::Horizontal))
+                            .halign(gtk::Align::Fill)
+                            .hexpand(true)
+                            .start_child(&t0)
+                            .end_child(&term1)
+                            .build();
+                        paned0.set_start_child(Some(&paned1));
+                        paned1.show();
+                        paned0.set_position(pos);
+                        t0.grab_focus();
+                    }
+                    s if s == t1.widget_name().as_str() => {
+                        let pos = paned0.position();
+                        let ch: Option<&gtk::Widget> = None;
+                        paned0.set_end_child(ch);
+                        let paned1 = gtk::Paned::builder()
+                            .orientation(orientation.unwrap_or(gtk::Orientation::Horizontal))
+                            .halign(gtk::Align::Fill)
+                            .hexpand(true)
+                            .start_child(&t1)
+                            .end_child(&term1)
+                            .build();
+                        paned0.set_end_child(Some(&paned1));
+                        paned1.show();
+                        paned0.set_position(pos);
+                        t1.grab_focus();
+                    }
+                    _ => {}
                 },
-                (None, None) => {},
+                (None, None) => {}
             }
         }
     }

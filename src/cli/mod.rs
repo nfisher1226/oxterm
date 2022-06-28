@@ -1,5 +1,6 @@
 use clap::{Arg, Command};
 
+#[must_use]
 pub fn opts() -> Command<'static> {
     Command::new("oxterm")
         .about("A terminal emulator in Rust and gtk4")

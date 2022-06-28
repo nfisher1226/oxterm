@@ -40,7 +40,7 @@ pub fn add(window: &Rc<OxWindow>, app: &gtk::Application) {
         match *name {
             "new_tab" => {
                 action.connect_activate(clone!(@strong window => move |_,_| {
-                    window.new_tab();
+                    let _tab = window.new_tab();
                 }));
             }
             "close_tab" => {

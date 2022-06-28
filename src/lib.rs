@@ -1,11 +1,13 @@
+#![warn(clippy::all, clippy::pedantic)]
 #![doc = include_str!("../README.md")]
 pub mod actions;
 pub mod cli;
 pub mod config;
-pub mod keys;
-pub mod ox_window;
-pub mod tab;
-pub mod tab_label;
+mod fonts;
+mod keys;
+mod ox_window;
+mod tab;
+mod tab_label;
 
 use {
     gtk::{
@@ -15,13 +17,21 @@ use {
     once_cell::sync::Lazy,
     std::{ffi::CStr, rc::Rc},
 };
-pub use {keys::Keys, ox_window::OxWindow, tab::Tab, tab_label::TabLabel};
+
+pub use {
+    fonts::{Font, ParseFontError},
+    keys::Keys,
+    ox_window::OxWindow,
+    tab::Tab,
+    tab_label::TabLabel,
+};
 
 static SHELL: Lazy<&'static str> = Lazy::new(|| {
     let shell = unsafe { CStr::from_ptr(vte::ffi::vte_get_user_shell()) };
     shell.to_str().unwrap_or("/bin/sh")
 });
 
+#[must_use]
 pub fn build_ui(app: &gtk::Application) -> Rc<OxWindow> {
     let window = Rc::new(OxWindow::new(app));
     actions::add(&window, app);
@@ -34,7 +44,11 @@ pub fn build_ui(app: &gtk::Application) -> Rc<OxWindow> {
     }));
     notebook.connect_switch_page(move |_nb, tab, _num| {
         if let Ok(tab) = tab.clone().downcast::<Tab>() {
-            tab.terms().borrow().values().next().map(|x| x.grab_focus());
+            tab.terms()
+                .borrow()
+                .values()
+                .next()
+                .map(gtk::prelude::WidgetExt::grab_focus);
         }
     });
     window.present();

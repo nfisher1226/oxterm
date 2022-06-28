@@ -19,10 +19,12 @@ glib::wrapper! {
 }
 
 impl OxWindow {
+    #[must_use]
     pub fn new(app: &gtk::Application) -> Self {
         Object::new(&[("application", app)]).expect("Cannot create OxtermWindow")
     }
 
+    #[must_use]
     pub fn notebook(&self) -> gtk::Notebook {
         self.imp().notebook.clone()
     }
@@ -38,6 +40,7 @@ impl OxWindow {
         }
     }
 
+    #[must_use]
     pub fn new_tab(&self) -> Tab {
         let tab = crate::Tab::new();
         self.imp().notebook.append_page(&tab, Some(&tab.label()));
@@ -49,7 +52,9 @@ impl OxWindow {
             .connect_close_clicked(clone!(@weak tab, @weak self as window => move |_| {
                 window.remove_tab(&tab);
             }));
-        tab.terms().borrow().values().next().unwrap().grab_focus();
+        if let Some(t) = tab.terms().borrow().values().next() {
+            t.grab_focus();
+        }
         tab
     }
 
@@ -57,6 +62,7 @@ impl OxWindow {
         self.imp().notebook.current_page()
     }
 
+    #[must_use]
     pub fn current_tab(&self) -> Option<Tab> {
         if let Some(t) = self.imp().notebook.nth_page(self.current_page()) {
             self.imp()
@@ -69,6 +75,7 @@ impl OxWindow {
         }
     }
 
+    #[must_use]
     pub fn nth_tab(&self, num: u32) -> Option<Tab> {
         if let Some(t) = self.imp().notebook.nth_page(Some(num)) {
             self.imp()
@@ -86,10 +93,8 @@ impl OxWindow {
             let pages = self.imp().notebook.n_pages();
             if current == pages - 1 {
                 self.imp().notebook.set_page(0);
-            } else {
-                self.imp()
-                    .notebook
-                    .set_page((current + 1).try_into().unwrap());
+            } else if let Ok(num) = i32::try_from(current + 1) {
+                self.imp().notebook.set_page(num);
             }
         }
     }
@@ -98,13 +103,11 @@ impl OxWindow {
         if let Some(current) = self.current_page() {
             let pages = self.imp().notebook.n_pages();
             if current == 0 {
-                self.imp()
-                    .notebook
-                    .set_page((pages - 1).try_into().unwrap());
-            } else {
-                self.imp()
-                    .notebook
-                    .set_page((current - 1).try_into().unwrap());
+                if let Ok(num) = i32::try_from(pages - 1) {
+                    self.imp().notebook.set_page(num);
+                }
+            } else if let Ok(num) = i32::try_from(current - 1) {
+                self.imp().notebook.set_page(num);
             }
         }
     }

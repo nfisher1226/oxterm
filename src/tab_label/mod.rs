@@ -18,11 +18,13 @@ impl Default for TabLabel {
 }
 
 impl TabLabel {
+    #[must_use]
     pub fn new() -> Self {
         Object::new(&[("orientation", &gtk::Orientation::Horizontal)])
             .expect("Cannot create tab label")
     }
 
+    #[must_use]
     pub fn close_button(&self) -> gtk::Button {
         self.imp().button.clone()
     }
@@ -31,6 +33,9 @@ impl TabLabel {
         self.imp().label.set_label(label);
     }
 
+    /// Connect to the "close-clicked" signal of the internal close button
+    /// # Panics
+    /// Panics if unable to get the object from the emitted signal (impossible)
     pub fn connect_close_clicked<F: Fn(&Self) + 'static>(&self, f: F) -> glib::SignalHandlerId {
         self.connect_local("close-clicked", true, move |values| {
             let obj = values[0].get::<Self>().unwrap();
