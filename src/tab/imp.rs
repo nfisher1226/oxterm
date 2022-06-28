@@ -9,6 +9,7 @@ use {
 pub struct Tab {
     pub label: TabLabel,
     pub terms: RefCell<HashMap<String, Terminal>>,
+    pub current_term: RefCell<Option<String>>,
 }
 
 #[glib::object_subclass]

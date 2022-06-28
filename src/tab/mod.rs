@@ -4,7 +4,7 @@ use {
     crate::{TabLabel, SHELL},
     gtk::{
         gio::Cancellable,
-        glib::{self, Object, SpawnFlags},
+        glib::{self, clone, Object, SpawnFlags},
         prelude::*,
         subclass::prelude::*,
     },
@@ -37,7 +37,7 @@ impl Tab {
             ("halign", &gtk::Align::Fill),
         ])
         .expect("Cannot create tab");
-        let term = Self::new_term();
+        let term = tab.new_term();
         tab.append(&term);
         term.show();
         tab.imp()
@@ -58,7 +58,7 @@ impl Tab {
     }
 
     #[must_use]
-    pub fn new_term() -> Terminal {
+    pub fn new_term(&self) -> Terminal {
         let term = Terminal::new();
         let name: String = std::iter::repeat_with(fastrand::alphanumeric)
             .take(10)
@@ -66,6 +66,7 @@ impl Tab {
         term.set_widget_name(&name);
         term.set_hexpand(true);
         term.set_halign(gtk::Align::Fill);
+        let cn: Option<&Cancellable> = None;
         term.spawn_async(
             PtyFlags::DEFAULT,
             None,
@@ -74,18 +75,19 @@ impl Tab {
             SpawnFlags::DEFAULT,
             Some(Box::new(|| {})),
             10,
-            Some(&Cancellable::new()),
+            cn,
             None,
         );
+        term.connect_has_focus_notify(clone!(@weak self as tab => move |term| {
+            *tab.imp().current_term.borrow_mut() = Some(term.widget_name().to_string());
+        }));
         term
     }
 
     #[must_use]
     pub fn current_term(&self) -> Option<Terminal> {
-        for term in self.imp().terms.borrow().values() {
-            if term.has_focus() {
-                return Some(term.clone());
-            }
+        if let Some(name) = &*self.imp().current_term.borrow() {
+            return self.imp().terms.borrow().get(name).cloned();
         }
         None
     }
@@ -113,7 +115,7 @@ impl Tab {
         let mut terms = self.imp().terms.borrow_mut();
         let old_term = terms.values().next().unwrap().clone();
         self.remove(&old_term);
-        let new_term = Self::new_term();
+        let new_term = self.new_term();
         terms.insert(new_term.widget_name().to_string(), new_term.clone());
         let orientation = match orientation {
             Some(o) => o,
@@ -134,7 +136,7 @@ impl Tab {
         if let Some((term0, paned0)) = self.current_term_parent() {
             let child1 = paned0.start_child();
             let child2 = paned0.end_child();
-            let term1 = Self::new_term();
+            let term1 = self.new_term();
             match (child1, child2) {
                 (Some(_), None) => {
                     paned0.set_end_child(Some(&term1));

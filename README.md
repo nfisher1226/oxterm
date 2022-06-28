@@ -22,9 +22,3 @@ the future development of the codebase.
 - [x] User configurable keybindings
 ## Currently Broken
 - Can't close open terminals (can close entire tabs though)
-- Can't open more than one additional pane from menu, only via shortcut keys
-  - Instead of looking to see which terminal has focus at that exact moment, need
-    to store the current terminal name as a property of Tab widget, so that it
-    is retrievable when the menu has focus. Needs to be updated whenever switching
-    panes. Bonus - this will allow the last focused terminal in each tab to grab
-    focus when switching tabs.
