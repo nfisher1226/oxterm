@@ -20,5 +20,26 @@ the future development of the codebase.
     - [ ] Images
     - [ ] Transparency
 - [x] User configurable keybindings
-## Currently Broken
-- Can't close open terminals (can close entire tabs though)
+## Building
+### Arch Linux
+Make sure to install the required dependencies. Arch has an official package for
+`gtk4` and an aur package for `vte4-git`. To install both using
+[pikaur](https://aur.archlinux.org/packages/pikaur):
+```Sh
+pikaur -S gtk4 vte4-git
+```
+Once the dependencies are installed the program is compiled using Cargo.
+```
+cargo build --release
+sudo install -v target/release/oxterm /usr/local/bin
+```
+### Other Unix/Linux
+A lot of Linux distros are significantly behind in packaging Gtk+ version 4 and
+will not have a new enough version in their official repos to build OxTerm. It
+is even less likely that you will find a package for vte compiled for gtk4. It
+is still possible to install OxTerm on these systems by compiling the required
+dependencies from source. This situation is expected to improve rapidly over the
+next year or so as Gnome transitions more completely from Gtk+ version 3 to Gtk+
+version 4.
+
+FreeBSD has a compatible package for Gtk+ version 4, but not for Vte.

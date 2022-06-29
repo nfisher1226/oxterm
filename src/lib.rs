@@ -1,5 +1,6 @@
 #![warn(clippy::all, clippy::pedantic)]
 #![doc = include_str!("../README.md")]
+mod about;
 pub mod actions;
 pub mod cli;
 pub mod config;
