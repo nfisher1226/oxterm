@@ -58,6 +58,7 @@ FreeBSD has a compatible package for Gtk+ version 4, but not for Vte.
 ## Keyboard Shortcuts
 The following table gives the default keybindings. If any customization is
 desired, see [configuration](#configuration)
+
 | Shortcut | Action |
 | -------- | ------ |
 | Ctrl/Shift/T | New Tab |
@@ -70,6 +71,7 @@ desired, see [configuration](#configuration)
 | Ctrl/Shift/N | New Window |
 | Ctrl/Shift/A | Show About Info |
 | Ctrl/Shift/Q | Close Window |
+
 ## Configuration
 Most of the planned configuration items are not yet implemented.
 
