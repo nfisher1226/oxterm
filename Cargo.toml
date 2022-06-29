@@ -16,7 +16,7 @@ version = "0.4"
 package = "gtk4"
 
 [dependencies.rgba_simple]
-version = "0.6"
+git = "https://codeberg.org/jeang3nie/rgba-simple"
 features = ["gdk"]
 
 [dependencies.serde]

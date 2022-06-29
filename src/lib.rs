@@ -4,7 +4,7 @@ mod about;
 pub mod actions;
 pub mod cli;
 pub mod config;
-mod fonts;
+mod font;
 mod keys;
 mod ox_window;
 mod tab;
@@ -20,7 +20,7 @@ use {
 };
 
 pub use {
-    fonts::{Font, ParseFontError},
+    font::{Font, ParseFontError},
     keys::Keys,
     ox_window::OxWindow,
     tab::Tab,

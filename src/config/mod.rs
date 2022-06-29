@@ -1,3 +1,17 @@
+mod background;
+mod cursor;
+mod dynamic_title_style;
+mod font;
+mod scrollback;
+
+pub use {
+    background::Background,
+    cursor::Cursor,
+    dynamic_title_style::DynamicTitleStyle,
+    font::Font,
+    scrollback::Scrollback,
+};
+
 use {
     gtk::glib,
     std::{fs, path::PathBuf},
