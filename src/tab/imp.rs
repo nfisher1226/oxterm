@@ -1,6 +1,11 @@
 use {
     crate::TabLabel,
-    gtk::{glib, subclass::prelude::*},
+    gtk::{
+        glib::{self,subclass::Signal},
+        prelude::*,
+        subclass::prelude::*,
+    },
+    once_cell::sync::Lazy,
     std::{cell::RefCell, collections::HashMap},
     vte::Terminal,
 };
@@ -22,6 +27,13 @@ impl ObjectSubclass for Tab {
 impl ObjectImpl for Tab {
     fn constructed(&self, obj: &Self::Type) {
         self.parent_constructed(obj);
+    }
+
+    fn signals() -> &'static [Signal] {
+        static SIGNALS: Lazy<Vec<Signal>> = Lazy::new(|| {
+            vec![Signal::builder("close-tab", &[], <()>::static_type().into()).build()]
+        });
+        SIGNALS.as_ref()
     }
 }
 

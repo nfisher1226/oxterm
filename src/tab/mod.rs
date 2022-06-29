@@ -6,6 +6,7 @@ use {
         gio::Cancellable,
         glib::{self, clone, Object, SpawnFlags},
         prelude::*,
+        traits::WidgetExt,
         subclass::prelude::*,
     },
     std::{cell::RefCell, collections::HashMap, path::Path},
@@ -80,6 +81,9 @@ impl Tab {
         );
         term.connect_has_focus_notify(clone!(@weak self as tab => move |term| {
             *tab.imp().current_term.borrow_mut() = Some(term.widget_name().to_string());
+        }));
+        term.connect_child_exited(clone!(@weak self as tab => move |term,_| {
+            tab.close_term(&term);
         }));
         term
     }
@@ -186,6 +190,75 @@ impl Tab {
                     _ => {}
                 },
                 (None, None) => {}
+            }
+        }
+    }
+
+    pub fn close_term(&self, term: &Terminal) {
+        if let Some(parent) = term.parent() {
+            if let Ok(paned) = parent.clone().downcast::<gtk::Paned>() {
+                let name = term.widget_name();
+                let ch: Option<&gtk::Widget> = None;
+                if let Some(t) = paned.start_child() {
+                    if t.widget_name() == name {
+                        paned.set_start_child(ch);
+                        self.imp().terms.borrow_mut().remove(t.widget_name().as_str());
+                        if let Some(t) = paned.end_child() {
+                            if let Some(parent) = paned.parent() {
+                                if let Ok(tab) = parent.clone().downcast::<Tab>() {
+                                    paned.set_end_child(ch);
+                                    tab.remove(&paned);
+                                    tab.append(&t);
+                                } else if let Ok(parent) = parent.downcast::<gtk::Paned>() {
+                                    if let Some(w) = parent.start_child() {
+                                        if paned.widget_name() == w.widget_name() {
+                                            paned.set_end_child(ch);
+                                            parent.set_start_child(Some(&t));
+                                        }
+                                    }
+                                    if let Some(w) = parent.end_child() {
+                                        if paned.widget_name() == w.widget_name() {
+                                            paned.set_end_child(ch);
+                                            parent.set_end_child(Some(&t));
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        return;
+                    }
+                }
+                if let Some(t) = paned.end_child() {
+                    if t.widget_name() == name {
+                        paned.set_end_child(ch);
+                        self.imp().terms.borrow_mut().remove(t.widget_name().as_str());
+                        if let Some(t) = paned.start_child() {
+                            if let Some(parent) = paned.parent() {
+                                if let Ok(tab) = parent.clone().downcast::<Tab>() {
+                                    paned.set_start_child(ch);
+                                    tab.remove(&paned);
+                                    tab.append(&t);
+                                } else if let Ok(parent) = parent.downcast::<gtk::Paned>() {
+                                    if let Some(w) = parent.start_child() {
+                                        if paned.widget_name() == w.widget_name() {
+                                            paned.set_end_child(ch);
+                                            parent.set_start_child(Some(&t));
+                                        }
+                                    }
+                                    if let Some(w) = parent.end_child() {
+                                        if paned.widget_name() == w.widget_name() {
+                                            paned.set_end_child(ch);
+                                            parent.set_end_child(Some(&t));
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } else if let Ok(tab) = parent.downcast::<Tab>() {
+                tab.remove(term);
+                tab.emit_by_name::<()>("close-tab", &[]);
             }
         }
     }
