@@ -55,6 +55,9 @@ impl OxWindow {
         if let Some(t) = tab.terms().borrow().values().next() {
             t.grab_focus();
         }
+        tab.connect_close_tab(clone!(@weak self as window => move |tab| {
+            window.remove_tab(&tab);
+        }));
         tab
     }
 

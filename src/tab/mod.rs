@@ -262,4 +262,15 @@ impl Tab {
             }
         }
     }
+
+    /// Connect to the "close-tab" signal, emitted when the last terminal has closed
+    /// # Panics
+    /// Panics if unable to get the object from the emitted signal (impossible)
+    pub fn connect_close_tab<F: Fn(&Self) + 'static>(&self, f: F) -> glib::SignalHandlerId {
+        self.connect_local("close-tab", true, move |values| {
+            let obj = values[0].get::<Self>().unwrap();
+            f(&obj);
+            None
+        })
+    }
 }
