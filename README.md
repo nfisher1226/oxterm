@@ -1,4 +1,5 @@
 The **Oxized** terminal emulator
+
 Contents
 ========
 - [Summary](#summary)
