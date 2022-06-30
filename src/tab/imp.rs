@@ -1,7 +1,7 @@
 use {
     crate::TabLabel,
     gtk::{
-        glib::{self,subclass::Signal},
+        glib::{self, subclass::Signal},
         prelude::*,
         subclass::prelude::*,
     },

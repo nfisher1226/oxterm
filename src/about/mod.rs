@@ -3,8 +3,9 @@ use {crate::ox_window::OxWindow, gtk::prelude::*, std::process::Command};
 pub fn show(window: &OxWindow) {
     let dlg = gtk::AboutDialog::builder()
         .comments("An Oxidized terminal for the Unix desktop")
-        .copyright("2022 by the Nathan Fisher")
+        .copyright("Copyright © 2022 by Nathan Fisher")
         .license_type(gtk::License::Gpl30)
+        .logo_icon_name("oxterm")
         .program_name("OxTerm")
         .system_information(&format!(
             "Gtk+ version: {}\nVte version: {}\nSystem: {}",
@@ -18,7 +19,7 @@ pub fn show(window: &OxWindow) {
         .modal(true)
         .transient_for(window)
         .build();
-    dlg.show()
+    dlg.show();
 }
 
 fn gtk4_version() -> String {
@@ -42,9 +43,7 @@ fn vte4_version() -> String {
 }
 
 fn system() -> String {
-    let cmd = Command::new("uname")
-        .arg("-a")
-        .output();
+    let cmd = Command::new("uname").arg("-a").output();
     match cmd {
         Ok(c) => String::from_utf8_lossy(&c.stdout).to_string(),
         Err(_) => String::from("unknown"),

@@ -6,8 +6,8 @@ use {
         gio::Cancellable,
         glib::{self, clone, Object, SpawnFlags},
         prelude::*,
-        traits::WidgetExt,
         subclass::prelude::*,
+        traits::WidgetExt,
     },
     std::{cell::RefCell, collections::HashMap, path::Path},
     vte::{PtyFlags, Terminal, TerminalExt},
@@ -83,7 +83,7 @@ impl Tab {
             *tab.imp().current_term.borrow_mut() = Some(term.widget_name().to_string());
         }));
         term.connect_child_exited(clone!(@weak self as tab => move |term,_| {
-            tab.close_term(&term);
+            tab.close_term(term);
         }));
         term
     }
@@ -202,7 +202,10 @@ impl Tab {
                 if let Some(t) = paned.start_child() {
                     if t.widget_name() == name {
                         paned.set_start_child(ch);
-                        self.imp().terms.borrow_mut().remove(t.widget_name().as_str());
+                        self.imp()
+                            .terms
+                            .borrow_mut()
+                            .remove(t.widget_name().as_str());
                         if let Some(t) = paned.end_child() {
                             if let Some(parent) = paned.parent() {
                                 if let Ok(tab) = parent.clone().downcast::<Tab>() {
@@ -231,7 +234,10 @@ impl Tab {
                 if let Some(t) = paned.end_child() {
                     if t.widget_name() == name {
                         paned.set_end_child(ch);
-                        self.imp().terms.borrow_mut().remove(t.widget_name().as_str());
+                        self.imp()
+                            .terms
+                            .borrow_mut()
+                            .remove(t.widget_name().as_str());
                         if let Some(t) = paned.start_child() {
                             if let Some(parent) = paned.parent() {
                                 if let Ok(tab) = parent.clone().downcast::<Tab>() {

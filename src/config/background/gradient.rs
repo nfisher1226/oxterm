@@ -1,4 +1,7 @@
-use {rgba_simple::{PrimaryColor, RGBA}, serde::{Deserialize, Serialize}};
+use {
+    rgba_simple::{PrimaryColor, RGBA},
+    serde::{Deserialize, Serialize},
+};
 
 #[derive(Default, Deserialize, Serialize)]
 pub enum VerticalPlacement {
@@ -56,24 +59,23 @@ pub struct Stop {
 #[derive(Deserialize, Serialize)]
 pub struct Gradient {
     kind: Kind,
-    start: Stop,
-    mid: Vec<Stop>,
-    end: Stop,
+    stops: Vec<Stop>,
 }
 
 impl Default for Gradient {
     fn default() -> Self {
         Self {
             kind: Kind::default(),
-            start: Stop {
-                color: PrimaryColor::Black.into(),
-                position: 0.0,
-            },
-            mid: vec![],
-            end: Stop {
-                color: RGBA::new(0.64, 0.64, 0.64, 1.0),
-                position: 100.0,
-            },
+            stops: vec![
+                Stop {
+                    color: PrimaryColor::Black.into(),
+                    position: 0.0,
+                },
+                Stop {
+                    color: RGBA::new(0.64, 0.64, 0.64, 1.0),
+                    position: 100.0,
+                },
+            ],
         }
     }
 }

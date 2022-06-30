@@ -1,4 +1,7 @@
-use {rgba_simple::RGBA, serde::{Deserialize, Serialize}};
+use {
+    rgba_simple::RGBA,
+    serde::{Deserialize, Serialize},
+};
 
 pub mod gradient;
 pub mod image;
@@ -8,5 +11,5 @@ pub use {gradient::Gradient, image::Image};
 pub enum Background {
     SolidColor(RGBA<f32>),
     Image(Image),
-    Gradient(),
+    Gradient(Gradient),
 }

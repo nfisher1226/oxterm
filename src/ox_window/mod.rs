@@ -56,7 +56,7 @@ impl OxWindow {
             t.grab_focus();
         }
         tab.connect_close_tab(clone!(@weak self as window => move |tab| {
-            window.remove_tab(&tab);
+            window.remove_tab(tab);
         }));
         tab
     }

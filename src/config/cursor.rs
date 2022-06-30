@@ -1,4 +1,7 @@
-use {serde::{Deserialize, Serialize}, std::fmt};
+use {
+    serde::{Deserialize, Serialize},
+    std::fmt,
+};
 
 #[derive(Default, Deserialize, Serialize)]
 pub enum Cursor {
@@ -10,10 +13,14 @@ pub enum Cursor {
 
 impl fmt::Display for Cursor {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> Result<(), fmt::Error> {
-        write!(f, "{}", match self {
-            Self::Block => "Block",
-            Self::Ibeam => "Ibeam",
-            Self::Underline => "Underline",
-        })
+        write!(
+            f,
+            "{}",
+            match self {
+                Self::Block => "Block",
+                Self::Ibeam => "Ibeam",
+                Self::Underline => "Underline",
+            }
+        )
     }
 }

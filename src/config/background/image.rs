@@ -1,4 +1,7 @@
-use {serde::{Deserialize, Serialize}, std::path::PathBuf};
+use {
+    serde::{Deserialize, Serialize},
+    std::path::PathBuf,
+};
 
 #[derive(Default, Deserialize, Serialize)]
 pub enum Style {

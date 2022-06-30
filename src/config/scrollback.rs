@@ -1,4 +1,7 @@
-use {serde::{Deserialize, Serialize}, std::fmt};
+use {
+    serde::{Deserialize, Serialize},
+    std::fmt,
+};
 
 #[derive(Deserialize, Serialize)]
 pub enum Scrollback {
@@ -16,7 +19,7 @@ impl fmt::Display for Scrollback {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> Result<(), fmt::Error> {
         match self {
             Self::Finite(n) => write!(f, "{}", *n as i64),
-            Self::Infinite => write!(f, "{}", "Infinite"),
+            Self::Infinite => write!(f, "Infinite"),
         }
     }
 }

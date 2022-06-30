@@ -30,6 +30,7 @@ const ACTIONS: [&str; 19] = [
     "quit",
 ];
 
+#[allow(clippy::too_many_lines)]
 pub fn add(window: &Rc<OxWindow>, app: &gtk::Application) {
     let keys = Keys::from_file().unwrap_or_default();
     for name in &ACTIONS {
