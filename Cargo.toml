@@ -26,3 +26,9 @@ features = ["derive"]
 [dependencies.vte]
 version = "0.1"
 package = "vte4"
+
+[profile.release]
+codegen-units = 1
+lto = true
+strip = true
+

@@ -38,7 +38,7 @@ fn main() {
         eprintln!("{e}");
     }
     app.connect_activate(move |app| {
-        let _gui = oxterm::build_ui(app);
+        let _window = oxterm::build_ui(app);
     });
     app.run();
 }

@@ -1,7 +1,7 @@
 use {
     clap_complete::{generate_to, shells},
     clap_mangen::Man,
-    std::{env, error::Error, fs, path::PathBuf, process},
+    std::{env, error::Error, fs, path::PathBuf},
     tiny_skia::Transform,
     usvg::{FitTo, Options, Tree},
 };
