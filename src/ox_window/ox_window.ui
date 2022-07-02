@@ -12,11 +12,11 @@
       </item>
       <item>
         <attribute name="label">Split Horizontal</attribute>
-	<attribute name="action">win.split_horizontal</attribute>
+        <attribute name="action">win.split_horizontal</attribute>
       </item>
       <item>
         <attribute name="label">Split Vertical</attribute>
-	<attribute name="action">win.split_vertical</attribute>
+        <attribute name="action">win.split_vertical</attribute>
       </item>
     </section>
     <section>
@@ -32,7 +32,7 @@
     <section>
       <item>
         <attribute name="label">Close Tab</attribute>
-	<attribute name="action">win.close_tab</attribute>
+        <attribute name="action">win.close_tab</attribute>
       </item>
       <item>
         <attribute name="label">Quit</attribute>
@@ -60,7 +60,7 @@
             <child type="action-end">
               <object id="menu_button" class="GtkMenuButton">
                 <property name="tooltip-text">Open application menu</property>
-		<property name="has-frame">0</property>
+                <property name="has-frame">0</property>
                 <property name="menu-model">actionMenu</property>
                 <child>
                   <object class="GtkImage">

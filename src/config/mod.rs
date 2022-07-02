@@ -6,7 +6,7 @@ mod pallette;
 mod scrollback;
 
 pub use {
-    background::{Background, Gradient, gradient::Stop},
+    background::{gradient::Stop, Background, Gradient},
     cursor::Cursor,
     dynamic_title_style::DynamicTitleStyle,
     font::Font,
