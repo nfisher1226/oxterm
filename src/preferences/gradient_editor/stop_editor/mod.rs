@@ -24,8 +24,24 @@ impl Default for StopEditor {
 impl StopEditor {
     #[must_use]
     pub fn new() -> Self {
-        Object::new(&[("orientation", &gtk::Orientation::Horizontal)])
-            .expect("Cannot create tab label")
+        let name: String = format!(
+            "stop_{}", 
+            std::iter::repeat_with(fastrand::alphanumeric)
+                .take(8)
+                .collect::<String>()
+        );
+        let obj = Object::new(&[
+            ("orientation", &gtk::Orientation::Horizontal),
+            ("name", &name)
+        ])
+        .expect("Cannot create tab label");
+        obj
+    }
+
+    pub fn new_with_stop(stop: &Stop) -> Self {
+        let ed = Self::new();
+        ed.set_stop(stop);
+        ed
     }
 
     #[must_use]
@@ -33,7 +49,7 @@ impl StopEditor {
         self.imp().button.clone()
     }
 
-    fn set_color(&self, color: Color) {
+    pub fn set_color(&self, color: Color) {
         self.imp().button.set_rgba(&color.into());
     }
 
@@ -42,7 +58,7 @@ impl StopEditor {
         self.imp().scale.clone()
     }
 
-    fn set_position(&self, position: f64) {
+    pub fn set_position(&self, position: f64) {
         self.imp().scale.set_value(position);
     }
 

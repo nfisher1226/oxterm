@@ -149,7 +149,7 @@
       </object>
     </child>
     <child>
-      <object class="GtkSpinButton" id="stops">
+      <object class="GtkSpinButton" id="num_stops">
         <property name="tooltip-text" translatable="yes">The number of different color stops used to define the gradient.</property>
         <property name="input-purpose">digits</property>
         <property name="climb-rate">1</property>

@@ -1,4 +1,5 @@
 use {
+    crate::config::Color,
     rgba_simple::{PrimaryColor, RGBA},
     serde::{Deserialize, Serialize},
     std::cmp::Ordering,
@@ -53,8 +54,20 @@ impl Default for Kind {
 
 #[derive(Deserialize, Serialize)]
 pub struct Stop {
-    pub color: RGBA<f32>,
+    pub color: Color,
     pub position: f64,
+}
+
+impl Stop {
+    pub const MIN_POSITION: f64 = 0.0;
+    pub const MAX_POSITION: f64 = 100.0;
+
+    pub fn new(color: Color, position: f64) -> Self {
+        Self {
+            color,
+            position,
+        }
+    }
 }
 
 impl PartialOrd for Stop {
