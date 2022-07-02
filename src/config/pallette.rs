@@ -1,6 +1,6 @@
 use {gtk::gdk, rgba_simple::RGBA};
 
-type Color = RGBA<f32>;
+pub type Color = RGBA<f32>;
 pub type Pallette = [gdk::RGBA; 16];
 
 pub struct Colors {

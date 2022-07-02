@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="StopEditor" parent="GtkBox">
+    <property name="orientation">horizontal</property>
+    <child>
+      <object class="GtkColorButton" id="button">
+      </object>
+    </child>
+    <child>
+      <object class="GtkSpinButton" id="scale">
+        <property name="orientation">horizontal</property>
+      </object>
+    </child>
+  </template>
+</interface>

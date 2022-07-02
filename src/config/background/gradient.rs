@@ -1,6 +1,7 @@
 use {
     rgba_simple::{PrimaryColor, RGBA},
     serde::{Deserialize, Serialize},
+    std::cmp::Ordering,
 };
 
 #[derive(Default, Deserialize, Serialize)]
@@ -21,8 +22,8 @@ pub enum HorizontalPlacement {
 
 #[derive(Default, Deserialize, Serialize)]
 pub struct Placement {
-    vertical: VerticalPlacement,
-    horizontal: HorizontalPlacement,
+    pub vertical: VerticalPlacement,
+    pub horizontal: HorizontalPlacement,
 }
 
 #[derive(Deserialize, Serialize)]
@@ -52,14 +53,26 @@ impl Default for Kind {
 
 #[derive(Deserialize, Serialize)]
 pub struct Stop {
-    color: RGBA<f32>,
-    position: f64,
+    pub color: RGBA<f32>,
+    pub position: f64,
+}
+
+impl PartialOrd for Stop {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        self.position.partial_cmp(&other.position)
+    }
+}
+
+impl PartialEq for Stop {
+    fn eq(&self, other: &Self) -> bool {
+        self.position == other.position
+    }
 }
 
 #[derive(Deserialize, Serialize)]
 pub struct Gradient {
-    kind: Kind,
-    stops: Vec<Stop>,
+    pub kind: Kind,
+    pub stops: Vec<Stop>,
 }
 
 impl Default for Gradient {

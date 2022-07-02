@@ -7,6 +7,7 @@ pub mod config;
 mod font;
 mod keys;
 mod ox_window;
+mod preferences;
 mod tab;
 mod tab_label;
 
