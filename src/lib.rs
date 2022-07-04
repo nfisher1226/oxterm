@@ -24,6 +24,7 @@ pub use {
     font::{Font, ParseFontError},
     keys::Keys,
     ox_window::OxWindow,
+    preferences::PreferencesDialog,
     tab::Tab,
     tab_label::TabLabel,
 };

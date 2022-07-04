@@ -133,7 +133,7 @@ fn copy_bin() -> Result<(), Box<dyn Error>> {
         fs::create_dir_all(&bindir)?;
     }
     let mut outfile = bindir;
-    outfile.push("eva");
+    outfile.push("oxterm");
     let infile: PathBuf = ["target", "release", "oxterm"].iter().collect();
     if !infile.exists() {
         eprintln!("Error: you must run \"cargo build --release\" first");

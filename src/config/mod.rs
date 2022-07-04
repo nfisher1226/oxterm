@@ -2,7 +2,7 @@ mod background;
 mod cursor;
 mod dynamic_title_style;
 mod font;
-mod pallette;
+mod palette;
 mod scrollback;
 
 pub use {
@@ -10,7 +10,7 @@ pub use {
     cursor::Cursor,
     dynamic_title_style::DynamicTitleStyle,
     font::Font,
-    pallette::{Color, Colors, Pallette},
+    palette::{Color, Colors, Palette},
     scrollback::Scrollback,
 };
 

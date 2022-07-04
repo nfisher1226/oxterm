@@ -1,5 +1,5 @@
 use {
-    crate::{about, Keys, OxWindow},
+    crate::{about, Keys, OxWindow, preferences},
     gtk::{
         gio::SimpleAction,
         glib::{self, clone},
@@ -122,11 +122,11 @@ pub fn add(window: &Rc<OxWindow>, app: &gtk::Application) {
                     let _window = crate::build_ui(&app);
                 }));
             }
-            /*"open_prefs" => {
-                action.connect_activate(clone!(@weak gui => move |_,_| {
-                    gui.dialogs.preferences.show();
+            "open_prefs" => {
+                action.connect_activate(clone!(@weak window => move |_,_| {
+                    preferences::run(&window);
                 }));
-            }*/
+            }
             "open_about" => {
                 action.connect_activate(clone!(@weak window => move |_,_| {
                     about::show(&window);

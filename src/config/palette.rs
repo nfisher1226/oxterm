@@ -1,7 +1,7 @@
 use {gtk::gdk, rgba_simple::RGBA};
 
 pub type Color = RGBA<f32>;
-pub type Pallette = [gdk::RGBA; 16];
+pub type Palette = [gdk::RGBA; 16];
 
 pub struct Colors {
     foreground: Color,
@@ -24,7 +24,7 @@ pub struct Colors {
     white: Color,
 }
 
-impl From<&Colors> for Pallette {
+impl From<&Colors> for Palette {
     fn from(colors: &Colors) -> Self {
         [
             colors.black.into(),
