@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
+  <object class="GtkAdjustment" id="scollback_lines_adjustment">
+    <property name="upper">10000</property>
+    <property name="value">1500</property>
+    <property name="step-increment">10</property>
+    <property name="page-increment">50</property>
+  </object>
   <template class="PreferencesDialog" parent="GtkDialog">
     <property name="title" translatable="1">OxTerm - Preferences</property>
     <property name="destroy-with-parent">1</property>
@@ -117,7 +123,7 @@
                       <object class="GtkLabel">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="halign">center</property>
+                        <property name="halign">start</property>
 			<property name="use-markup">True</property>
 		        <property name="label" translatable="yes">&lt;b&gt;Command&lt;/b&gt;</property>
                         <layout>
@@ -150,6 +156,20 @@
                         <layout>
                           <property name="column">1</property>
                           <property name="row">4</property>
+                        </layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">start</property>
+			<property name="use-markup">True</property>
+		        <property name="label" translatable="yes">&lt;b&gt;Tabs&lt;/b&gt;</property>
+                        <layout>
+                          <property name="column">0</property>
+                          <property name="row">5</property>
+                          <property name="column-span">2</property>
                         </layout>
                       </object>
                     </child>
@@ -189,21 +209,177 @@
                 <property name="title">Text</property>
                 <property name="child">
                   <object class="GtkGrid">
-                    <property name="halign">center</property>
+                    <property name="halign">fill</property>
                     <property name="hexpand">1</property>
                     <property name="row-spacing">10</property>
                     <property name="column-spacing">10</property>
+		    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="use-markup">True</property>
+		        <property name="label" translatable="yes">&lt;b&gt;Cursor&lt;/b&gt;</property>
+                        <layout>
+                          <property name="column">0</property>
+                          <property name="row">0</property>
+                          <property name="column-span">3</property>
+                        </layout>
+		      </object>
+		    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="can-focus">0</property>
+                        <property name="label">CursorStyle:</property>
+                        <property name="halign">start</property>
+                        <layout>
+                          <property name="column">0</property>
+                          <property name="row">1</property>
+                        </layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkComboBoxText" id="cursor_style">
+                        <property name="tooltip-text">The style of the cursor</property>
+			<property name="hexpand">True</property>
+                        <layout>
+                          <property name="column">1</property>
+                          <property name="row">1</property>
+                        </layout>
+                        <items>
+                          <item translatable="yes" id="block">Block</item>
+                          <item translatable="yes" id="ibeam">Ibeam</item>
+                          <item translatable="yes" id="underline">Underline</item>
+                        </items>
+                      </object>
+                    </child>
+		    <child>
+                      <object class="GtkCheckButton" id="cursor_blinks">
+                        <property name="label">Cursor blinks</property>
+                        <property name="tooltip-text">Whether or not to let the cursor blink to aid in seeing it's location</property>
+                        <property name="active">True</property>
+			<property name="halign">start</property>
+			<layout>
+                          <property name="column">2</property>
+			  <property name="row">1</property>
+			</layout>
+		      </object>
+		    </child>
+		    <child>
+                      <object class="GtkLabel">
+		        <property name="halign">start</property>
+			<property name="use-markup">True</property>
+			<property name="label">&lt;b&gt;Scrollback&lt;/b&gt;</property>
+			<layout>
+                          <property name="column">0</property>
+			  <property name="row">2</property>
+			  <property name="column-span">3</property>
+			</layout>
+		      </object>
+		    </child>
+		    <child>
+                      <object class="GtkLabel">
+                        <property name="can-focus">0</property>
+                        <property name="label">Lines:</property>
+                        <property name="halign">start</property>
+                        <layout>
+                          <property name="column">0</property>
+                          <property name="row">3</property>
+                        </layout>
+		      </object>
+		    </child>
+                    <child>
+                      <object class="GtkSpinButton" id="scrollback_lines">
+                        <property name="tooltip-text" translatable="True">The number of lines to save in the scrollback history.</property>
+                        <property name="hexpand">True</property>
+                        <property name="adjustment">scollback_lines_adjustment</property>
+                        <layout>
+                          <property name="column">1</property>
+                          <property name="row">3</property>
+                        </layout>
+                      </object>
+                    </child>
+		    <child>
+                      <object class="GtkCheckButton" id="infinite_scrollback">
+		        <property name="label" translatable="true">Infinite</property>
+			<property name="tooltip-text" translatable="true">If checked, an unlimited number of lines will be saved in the scrollback history. This feature can significantly increase memory consumption for a long running terminal, particularly with multiple terminals open simultaneously.</property>
+			<property name="halign">start</property>
+			<layout>
+                          <property name="column">2</property>
+			  <property name="row">3</property>
+			</layout>
+		      </object>
+		    </child>
+		    <child>
+                      <object class="GtkLabel">
+		        <property name="halign">start</property>
+			<property name="use-markup">True</property>
+			<property name="label">&lt;b&gt;Font&lt;/b&gt;</property>
+			<layout>
+                          <property name="column">0</property>
+			  <property name="row">4</property>
+			  <property name="column-span">3</property>
+			</layout>
+		      </object>
+		    </child>
+		    <child>
+                      <object class="GtkCheckButton" id="system_font">
+		        <property name="label" translatable="true">System font</property>
+                        <property name="tooltip-text" translatable="yes">Use the monospace variant of the standard system typeface.</property>
+                        <property name="active">True</property>
+			<property name="halign">start</property>
+			<layout>
+                          <property name="column">0</property>
+			  <property name="row">5</property>
+			</layout>
+		      </object>
+		    </child>
+                    <child>
+                      <object class="GtkFontButton" id="font_chooser_button">
+                        <property name="tooltip-text" translatable="yes">The font to display in the terminal.</property>
+                        <property name="hexpand">True</property>
+                        <property name="font">Sans 12</property>
+                        <property name="language">en-us</property>
+                        <property name="level">GTK_FONT_CHOOSER_LEVEL_STYLE | GTK_FONT_CHOOSER_LEVEL_SIZE | GTK_FONT_CHOOSER_LEVEL_FEATURES | GTK_FONT_CHOOSER_LEVEL_FAMILY</property>
+                        <property name="preview-text">All your fonts are belong to us.</property>
+			<layout>
+                          <property name="column">1</property>
+			  <property name="row">5</property>
+			</layout>
+                      </object>
+                    </child>
+		    <child>
+                      <object class="GtkLabel">
+		        <property name="halign">start</property>
+			<property name="label">Text Color:</property>
+			<layout>
+                          <property name="column">0</property>
+			  <property name="row">6</property>
+			</layout>
+		      </object>
+		    </child>
+                    <child>
+                      <object class="GtkColorButton" id="text_color">
+                        <property name="tooltip-text" translatable="yes">Text Color</property>
+                        <property name="rgba">rgb(227,227,227)</property>
+			<property name="halign">start</property>
+			<layout>
+                          <property name="column">1</property>
+			  <property name="row">6</property>
+			</layout>
+                      </object>
+                    </child>
                   </object>
                 </property>
               </object>
             </child>
             <child>
               <object class="GtkStackPage">
-                <property name="name">color</property>
-                <property name="title">Color</property>
+                <property name="name">palette</property>
+                <property name="title">Palette</property>
                 <property name="child">
                   <object class="GtkGrid">
-                    <property name="halign">center</property>
+                    <property name="halign">fill</property>
                     <property name="hexpand">1</property>
                     <property name="row-spacing">10</property>
                     <property name="column-spacing">10</property>
@@ -217,7 +393,7 @@
                 <property name="title">Background</property>
                 <property name="child">
                   <object class="GtkGrid">
-                    <property name="halign">center</property>
+                    <property name="halign">fill</property>
                     <property name="hexpand">1</property>
                     <property name="row-spacing">10</property>
                     <property name="column-spacing">10</property>

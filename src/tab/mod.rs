@@ -28,12 +28,8 @@ impl Default for Tab {
 impl Tab {
     #[must_use]
     pub fn new() -> Self {
-        let name: String = std::iter::repeat_with(fastrand::alphanumeric)
-            .take(10)
-            .collect();
         let tab: Self = Object::new(&[
             ("orientation", &gtk::Orientation::Horizontal),
-            ("name", &name),
             ("hexpand", &true),
             ("halign", &gtk::Align::Fill),
         ])
