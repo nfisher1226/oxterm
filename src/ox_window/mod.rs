@@ -30,11 +30,6 @@ impl OxWindow {
     }
 
     pub fn remove_tab(&self, tab: &Tab) {
-        let _val = self
-            .imp()
-            .tabs
-            .borrow_mut()
-            .remove(tab.widget_name().as_str());
         if let Some(num) = self.imp().notebook.page_num(tab) {
             self.imp().notebook.remove_page(Some(num));
         }
@@ -44,10 +39,6 @@ impl OxWindow {
     pub fn new_tab(&self) -> Tab {
         let tab = crate::Tab::new();
         self.imp().notebook.append_page(&tab, Some(&tab.label()));
-        self.imp()
-            .tabs
-            .borrow_mut()
-            .insert(tab.widget_name().to_string(), tab.clone());
         tab.label()
             .connect_close_clicked(clone!(@weak tab, @weak self as window => move |_| {
                 window.remove_tab(&tab);
@@ -67,28 +58,18 @@ impl OxWindow {
 
     #[must_use]
     pub fn current_tab(&self) -> Option<Tab> {
-        if let Some(t) = self.imp().notebook.nth_page(self.current_page()) {
-            self.imp()
-                .tabs
-                .borrow()
-                .get(&t.widget_name().to_string())
-                .cloned()
-        } else {
-            None
-        }
+        self.imp()
+            .notebook
+            .nth_page(self.current_page())
+            .map(|x| x.downcast::<Tab>().unwrap())
     }
 
     #[must_use]
     pub fn nth_tab(&self, num: u32) -> Option<Tab> {
-        if let Some(t) = self.imp().notebook.nth_page(Some(num)) {
-            self.imp()
-                .tabs
-                .borrow()
-                .get(&t.widget_name().to_string())
-                .cloned()
-        } else {
-            None
-        }
+        self.imp()
+            .notebook
+            .nth_page(Some(num))
+            .map(|x| x.downcast::<Tab>().unwrap())
     }
 
     pub fn next_tab(&self) {
@@ -116,12 +97,6 @@ impl OxWindow {
     }
 
     pub fn close_current_tab(&self) {
-        if let Some(page) = self.current_page() {
-            if let Some(tab) = self.current_tab() {
-                let name = tab.widget_name().to_string();
-                self.imp().tabs.borrow_mut().remove(&name);
-            }
-            self.imp().notebook.remove_page(Some(page));
-        }
+        self.imp().notebook.remove_page(self.current_page());
     }
 }

@@ -1,5 +1,5 @@
 use {
-    crate::{about, Keys, OxWindow, preferences},
+    crate::{about, preferences, Keys, OxWindow},
     gtk::{
         gio::SimpleAction,
         glib::{self, clone},

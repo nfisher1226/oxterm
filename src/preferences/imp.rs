@@ -1,9 +1,6 @@
 use {
     gtk::{
-        glib::{
-            self,
-            subclass::InitializingObject,
-        },
+        glib::{self, subclass::InitializingObject},
         prelude::*,
         subclass::prelude::*,
         CompositeTemplate,
@@ -13,8 +10,7 @@ use {
 
 #[derive(CompositeTemplate, Default)]
 #[template(file = "preferences.ui")]
-pub struct PreferencesDialog {
-}
+pub struct PreferencesDialog {}
 
 #[glib::object_subclass]
 impl ObjectSubclass for PreferencesDialog {

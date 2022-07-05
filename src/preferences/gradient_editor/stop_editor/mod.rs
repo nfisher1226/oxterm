@@ -25,14 +25,14 @@ impl StopEditor {
     #[must_use]
     pub fn new() -> Self {
         let name: String = format!(
-            "stop_{}", 
+            "stop_{}",
             std::iter::repeat_with(fastrand::alphanumeric)
                 .take(8)
                 .collect::<String>()
         );
         let obj = Object::new(&[
             ("orientation", &gtk::Orientation::Horizontal),
-            ("name", &name)
+            ("name", &name),
         ])
         .expect("Cannot create tab label");
         obj

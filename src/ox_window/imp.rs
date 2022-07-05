@@ -1,12 +1,8 @@
-use {
-    crate::Tab,
-    gtk::{
-        glib::{self, subclass::InitializingObject},
-        prelude::*,
-        subclass::prelude::*,
-        CompositeTemplate,
-    },
-    std::{cell::RefCell, collections::HashMap},
+use gtk::{
+    glib::{self, subclass::InitializingObject},
+    prelude::*,
+    subclass::prelude::*,
+    CompositeTemplate,
 };
 
 #[derive(CompositeTemplate, Default)]
@@ -16,7 +12,6 @@ pub struct OxWindow {
     pub notebook: TemplateChild<gtk::Notebook>,
     #[template_child]
     pub menu_button: TemplateChild<gtk::MenuButton>,
-    pub tabs: RefCell<HashMap<String, Tab>>,
 }
 
 #[glib::object_subclass]

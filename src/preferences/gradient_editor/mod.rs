@@ -39,7 +39,10 @@ impl GradientEditor {
         let stop_editor = StopEditor::new();
         let name = stop_editor.widget_name().to_string();
         let _page = self.imp().stops_stack.add_child(&stop_editor);
-        self.imp().stops.borrow_mut().insert(stop_editor.widget_name().to_string(), stop_editor.clone());
+        self.imp()
+            .stops
+            .borrow_mut()
+            .insert(stop_editor.widget_name().to_string(), stop_editor.clone());
         self.imp().stop_selector.append(Some(&name), &name);
         stop_editor
     }

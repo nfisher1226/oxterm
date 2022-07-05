@@ -1,15 +1,12 @@
 use {
+    super::stop_editor::StopEditor,
     gtk::{
-        glib::{
-            self,
-            subclass::InitializingObject,
-        },
+        glib::{self, subclass::InitializingObject},
         prelude::*,
         subclass::prelude::*,
         CompositeTemplate,
     },
     std::{cell::RefCell, collections::HashMap},
-    super::stop_editor::StopEditor,
 };
 
 #[derive(CompositeTemplate, Default)]

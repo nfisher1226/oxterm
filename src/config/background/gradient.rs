@@ -63,10 +63,7 @@ impl Stop {
     pub const MAX_POSITION: f64 = 100.0;
 
     pub fn new(color: Color, position: f64) -> Self {
-        Self {
-            color,
-            position,
-        }
+        Self { color, position }
     }
 }
 
