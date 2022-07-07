@@ -1,5 +1,9 @@
+mod background_page;
+mod general_page;
 mod gradient_editor;
 mod imp;
+mod palette_page;
+mod text_page;
 
 use {
     crate::OxWindow,
@@ -8,6 +12,10 @@ use {
         prelude::*,
         subclass::prelude::*,
     },
+};
+pub use {
+    background_page::BackgroundPage, general_page::GeneralPage, palette_page::PalettePage,
+    text_page::TextPage,
 };
 
 glib::wrapper! {
@@ -36,6 +44,20 @@ pub fn run(window: &OxWindow) {
 impl PreferencesDialog {
     #[must_use]
     pub fn new() -> Self {
-        Object::new(&[("use-header-bar", &1)]).expect("Cannot create preferences dialog")
+        let obj: Self =
+            Object::new(&[("use-header-bar", &1)]).expect("Cannot create preferences dialog");
+        obj.imp()
+            .stack
+            .add_titled(&obj.imp().general_page, Some("general"), "General");
+        obj.imp()
+            .stack
+            .add_titled(&obj.imp().text_page, Some("text"), "Text");
+        obj.imp()
+            .stack
+            .add_titled(&obj.imp().palette_page, Some("palette"), "Palette");
+        obj.imp()
+            .stack
+            .add_titled(&obj.imp().background_page, Some("background"), "Background");
+        obj
     }
 }

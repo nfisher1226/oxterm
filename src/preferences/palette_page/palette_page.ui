@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="PalettePage" parent="GtkGrid">
+                    <property name="halign">fill</property>
+                    <property name="hexpand">1</property>
+                    <property name="row-spacing">0</property>
+                    <property name="column-spacing">0</property>
+		    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">horizontal</property>
+			<property name="spacing">6</property>
+			<property name="margin-bottom">10</property>
+			<layout>
+                          <property name="column">0</property>
+			  <property name="row">0</property>
+			  <property name="column-span">8</property>
+			</layout>
+		        <child>
+                          <object class="GtkComboBoxText" id="palette_selector">
+		            <property name="halign">fill</property>
+			    <property name="hexpand">True</property>
+			    <items>
+                              <item translatable="yes" id="default">Default</item>
+			    </items>
+		          </object>
+		        </child>
+		        <child>
+                          <object class="GtkButton" id="add_palette">
+                            <property name="tooltip-text">Create a new color palette</property>
+			    <property name="label">New</property>
+		          </object>
+		        </child>
+		        <child>
+                          <object class="GtkButton" id="remove_palette">
+                            <property name="tooltip-text">Remove this color palette</property>
+			    <property name="label">Remove</property>
+		          </object>
+		        </child>
+		      </object>
+		    </child>
+                    <child>
+                      <object class="GtkColorButton" id="black_color">
+                        <property name="tooltip-text" translatable="yes">Black</property>
+                        <property name="hexpand">True</property>
+                        <property name="rgba">rgb(0,0,0)</property>
+			<layout>
+                          <property name="column">0</property>
+			  <property name="row">1</property>
+			</layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkColorButton" id="red_color">
+                        <property name="tooltip-text" translatable="yes">Red</property>
+                        <property name="hexpand">True</property>
+                        <property name="rgba">rgb(165,29,45)</property>
+			<layout>
+                          <property name="column">1</property>
+			  <property name="row">1</property>
+			</layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkColorButton" id="green_color">
+                        <property name="tooltip-text" translatable="yes">Green</property>
+                        <property name="hexpand">True</property>
+                        <property name="rgba">rgb(0,170,0)</property>
+			<layout>
+                          <property name="column">2</property>
+			  <property name="row">1</property>
+			</layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkColorButton" id="brown_color">
+                        <property name="tooltip-text" translatable="yes">Brown</property>
+                        <property name="hexpand">True</property>
+                        <property name="rgba">rgb(99,69,44)</property>
+			<layout>
+                          <property name="column">3</property>
+			  <property name="row">1</property>
+			</layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkColorButton" id="blue_color">
+                        <property name="tooltip-text" translatable="yes">Blue</property>
+                        <property name="hexpand">True</property>
+                        <property name="rgba">rgb(0,0,170)</property>
+			<layout>
+                          <property name="column">4</property>
+			  <property name="row">1</property>
+			</layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkColorButton" id="magenta_color">
+                        <property name="tooltip-text" translatable="yes">Magenta</property>
+                        <property name="hexpand">True</property>
+                        <property name="rgba">rgb(170,0,170)</property>
+			<layout>
+                          <property name="column">5</property>
+			  <property name="row">1</property>
+			</layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkColorButton" id="cyan_color">
+                        <property name="tooltip-text" translatable="yes">Cyan</property>
+                        <property name="hexpand">True</property>
+                        <property name="rgba">rgb(0,170,170)</property>
+			<layout>
+                          <property name="column">6</property>
+			  <property name="row">1</property>
+			</layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkColorButton" id="light_grey_color">
+                        <property name="tooltip-text" translatable="yes">Light Grey</property>
+                        <property name="hexpand">True</property>
+                        <property name="rgba">rgb(170,170,170)</property>
+			<layout>
+                          <property name="column">7</property>
+			  <property name="row">1</property>
+			</layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkColorButton" id="dark_grey_color">
+                        <property name="tooltip-text" translatable="yes">Dark Grey</property>
+                        <property name="hexpand">True</property>
+                        <property name="rgba">rgb(85,85,85)</property>
+			<layout>
+                          <property name="column">0</property>
+			  <property name="row">2</property>
+			</layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkColorButton" id="light_red_color">
+                        <property name="tooltip-text" translatable="yes">Light Red</property>
+                        <property name="hexpand">True</property>
+                        <property name="rgba">rgb(288,85,85)</property>
+			<layout>
+                          <property name="column">1</property>
+			  <property name="row">2</property>
+			</layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkColorButton" id="light_green_color">
+                        <property name="tooltip-text" translatable="yes">Light Green</property>
+                        <property name="hexpand">True</property>
+                        <property name="rgba">rgb(85,255,85)</property>
+			<layout>
+                          <property name="column">2</property>
+			  <property name="row">2</property>
+			</layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkColorButton" id="yellow_color">
+                        <property name="tooltip-text" translatable="yes">Yellow</property>
+                        <property name="hexpand">True</property>
+                        <property name="rgba">rgb(255,189,0)</property>
+			<layout>
+                          <property name="column">3</property>
+			  <property name="row">2</property>
+			</layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkColorButton" id="light_blue_color">
+                        <property name="tooltip-text" translatable="yes">Light Blue</property>
+                        <property name="hexpand">True</property>
+                        <property name="rgba">rgb(85,85,255)</property>
+			<layout>
+                          <property name="column">4</property>
+			  <property name="row">2</property>
+			</layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkColorButton" id="light_magenta_color">
+                        <property name="tooltip-text" translatable="yes">Light Magenta</property>
+                        <property name="hexpand">True</property>
+                        <property name="rgba">rgb(255,85,255)</property>
+			<layout>
+                          <property name="column">5</property>
+			  <property name="row">2</property>
+			</layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkColorButton" id="light_cyan_color">
+                        <property name="tooltip-text" translatable="yes">Light Cyan</property>
+                        <property name="hexpand">True</property>
+                        <property name="rgba">rgb(85,255, 255)</property>
+			<layout>
+                          <property name="column">6</property>
+			  <property name="row">2</property>
+			</layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkColorButton" id="white_color">
+                        <property name="tooltip-text" translatable="yes">White</property>
+                        <property name="hexpand">True</property>
+                        <property name="rgba">rgb(255,255, 255)</property>
+			<layout>
+                          <property name="column">7</property>
+			  <property name="row">2</property>
+			</layout>
+                      </object>
+                    </child>
+  </template>
+</interface>

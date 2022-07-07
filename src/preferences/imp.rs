@@ -1,16 +1,20 @@
-use {
-    gtk::{
-        glib::{self, subclass::InitializingObject},
-        prelude::*,
-        subclass::prelude::*,
-        CompositeTemplate,
-    },
-    std::{cell::RefCell, collections::HashMap},
+use gtk::{
+    glib::{self, subclass::InitializingObject},
+    prelude::*,
+    subclass::prelude::*,
+    CompositeTemplate,
 };
 
 #[derive(CompositeTemplate, Default)]
 #[template(file = "preferences.ui")]
-pub struct PreferencesDialog {}
+pub struct PreferencesDialog {
+    #[template_child]
+    pub stack: TemplateChild<gtk::Stack>,
+    pub general_page: super::GeneralPage,
+    pub text_page: super::TextPage,
+    pub palette_page: super::PalettePage,
+    pub background_page: super::BackgroundPage,
+}
 
 #[glib::object_subclass]
 impl ObjectSubclass for PreferencesDialog {
