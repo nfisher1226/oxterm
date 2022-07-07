@@ -140,6 +140,7 @@
         <property name="language">en-us</property>
         <property name="level">GTK_FONT_CHOOSER_LEVEL_STYLE | GTK_FONT_CHOOSER_LEVEL_SIZE | GTK_FONT_CHOOSER_LEVEL_FEATURES | GTK_FONT_CHOOSER_LEVEL_FAMILY</property>
         <property name="preview-text">All your fonts are belong to us.</property>
+	<property name="sensitive">False</property>
         <layout>
           <property name="column">1</property>
           <property name="row">5</property>
