@@ -1,17 +1,21 @@
 mod background;
 mod cursor;
 mod dynamic_title_style;
+mod general;
 mod font;
 mod palette;
 mod scrollback;
+mod tab_position;
 
 pub use {
     background::{gradient::Stop, Background, Gradient},
     cursor::Cursor,
     dynamic_title_style::DynamicTitleStyle,
+    general::General,
     font::Font,
     palette::{Color, Colors, Palette},
     scrollback::Scrollback,
+    tab_position::TabPosition,
 };
 
 use {
@@ -42,4 +46,6 @@ pub fn get_config_file() -> PathBuf {
     file
 }
 
-pub struct Config {}
+pub struct Config {
+    pub general: General,
+}

@@ -3,7 +3,7 @@ use {
     std::fmt,
 };
 
-#[derive(Default, Deserialize, Serialize)]
+#[derive(Clone, Default, Deserialize, Serialize)]
 pub enum DynamicTitleStyle {
     ReplacesTitle,
     BeforeTitle,

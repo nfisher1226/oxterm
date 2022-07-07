@@ -39,6 +39,8 @@ pub struct PalettePage {
     #[template_child]
     pub yellow_color: TemplateChild<gtk::ColorButton>,
     #[template_child]
+    pub light_blue_color: TemplateChild<gtk::ColorButton>,
+    #[template_child]
     pub light_magenta_color: TemplateChild<gtk::ColorButton>,
     #[template_child]
     pub light_cyan_color: TemplateChild<gtk::ColorButton>,
