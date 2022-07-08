@@ -1,7 +1,7 @@
 use {
-    crate::preferences::GeneralPage, 
-    serde::{Deserialize, Serialize},
     super::{DynamicTitleStyle, TabPosition},
+    crate::preferences::GeneralPage,
+    serde::{Deserialize, Serialize},
 };
 
 #[derive(Clone, Deserialize, Serialize)]

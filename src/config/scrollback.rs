@@ -3,7 +3,7 @@ use {
     std::fmt,
 };
 
-#[derive(Deserialize, Serialize)]
+#[derive(Clone, Deserialize, Serialize)]
 pub enum Scrollback {
     Finite(f64),
     Infinite,

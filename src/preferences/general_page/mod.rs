@@ -6,7 +6,7 @@ use gtk::{
     subclass::prelude::*,
 };
 
-use crate::config::{DynamicTitleStyle, TabPosition, General};
+use crate::config::{DynamicTitleStyle, General, TabPosition};
 
 glib::wrapper! {
     pub struct GeneralPage(ObjectSubclass<imp::GeneralPage>)
@@ -36,7 +36,13 @@ impl GeneralPage {
     }
 
     pub fn title_style(&self) -> DynamicTitleStyle {
-        match self.imp().dynamic_title.active_id().unwrap_or(GString::from("after_title")).as_str() {
+        match self
+            .imp()
+            .dynamic_title
+            .active_id()
+            .unwrap_or(GString::from("after_title"))
+            .as_str()
+        {
             "replaces_title" => DynamicTitleStyle::ReplacesTitle,
             "before_title" => DynamicTitleStyle::BeforeTitle,
             "after_title" => DynamicTitleStyle::AfterTitle,
@@ -70,17 +76,23 @@ impl GeneralPage {
                 imp.custom_command_checkbutton.set_active(true);
                 imp.custom_command.set_text(&c);
                 imp.custom_command.set_sensitive(true);
-            },
+            }
             None => {
                 imp.custom_command_checkbutton.set_active(false);
                 imp.custom_command.set_text("");
                 imp.custom_command.set_sensitive(false);
-            },
+            }
         }
     }
 
     pub fn tab_position(&self) -> TabPosition {
-        match self.imp().tab_position.active_id().unwrap_or(GString::from("top")).as_str() {
+        match self
+            .imp()
+            .tab_position
+            .active_id()
+            .unwrap_or(GString::from("top"))
+            .as_str()
+        {
             "top" => TabPosition::Top,
             "bottom" => TabPosition::Bottom,
             "left" => TabPosition::Left,

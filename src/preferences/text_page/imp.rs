@@ -1,5 +1,5 @@
 use gtk::{
-    glib::{self, clone, subclass::InitializingObject},
+    glib::{self, clone, subclass::InitializingObject, GString},
     prelude::*,
     subclass::prelude::*,
     CompositeTemplate,
@@ -20,6 +20,8 @@ pub struct TextPage {
     pub system_font: TemplateChild<gtk::CheckButton>,
     #[template_child]
     pub font_chooser_button: TemplateChild<gtk::FontButton>,
+    #[template_child]
+    pub color_type: TemplateChild<gtk::ComboBoxText>,
     #[template_child]
     pub text_color: TemplateChild<gtk::ColorButton>,
 }
@@ -53,6 +55,15 @@ impl ObjectImpl for TextPage {
                 fc.set_sensitive(!but.is_active());
             }),
         );
+        self.text_color.set_sensitive(false);
+        self.color_type.set_active_id(Some("white"));
+        self.color_type
+            .connect_changed(clone!(@strong self.text_color as tc => move |bx| {
+                match bx.active_id().unwrap_or(GString::from("white")).as_str() {
+                    "custom" => tc.set_sensitive(true),
+                    _ => tc.set_sensitive(false),
+                }
+            }));
     }
 }
 

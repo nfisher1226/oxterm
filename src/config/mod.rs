@@ -1,21 +1,23 @@
 mod background;
 mod cursor;
 mod dynamic_title_style;
-mod general;
 mod font;
+mod general;
 mod palette;
 mod scrollback;
 mod tab_position;
+mod text;
 
 pub use {
     background::{gradient::Stop, Background, Gradient},
-    cursor::Cursor,
+    cursor::{Cursor, CursorStyle},
     dynamic_title_style::DynamicTitleStyle,
-    general::General,
     font::Font,
+    general::General,
     palette::{Color, Colors, Palette},
     scrollback::Scrollback,
     tab_position::TabPosition,
+    text::{Text, TextColor},
 };
 
 use {

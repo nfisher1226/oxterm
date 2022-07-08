@@ -158,12 +158,26 @@
       </object>
     </child>
     <child>
+      <object class="GtkComboBoxText" id="color_type">
+        <property name="tooltip-text">When set to Black or White, the text color is taken from the current palette's black or white color.</property>
+        <items>
+          <item id="black" translatable="yes">Black</item>
+	  <item id="white" translatable="yes">White</item>
+	  <item id="custom" translatable="yes">Custom</item>
+	</items>
+	<layout>
+          <property name="column">1</property>
+          <property name="row">6</property>
+	</layout>
+      </object>
+    </child>
+    <child>
       <object class="GtkColorButton" id="text_color">
         <property name="tooltip-text" translatable="yes">Text Color</property>
         <property name="rgba">rgb(227,227,227)</property>
         <property name="halign">start</property>
         <layout>
-          <property name="column">1</property>
+          <property name="column">2</property>
           <property name="row">6</property>
         </layout>
       </object>
