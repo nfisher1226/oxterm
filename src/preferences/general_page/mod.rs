@@ -36,19 +36,13 @@ impl GeneralPage {
     }
 
     pub fn title_style(&self) -> DynamicTitleStyle {
-        match self
-            .imp()
+        self.imp()
             .dynamic_title
             .active_id()
-            .unwrap_or(GString::from("after_title"))
+            .unwrap_or(GString::from(""))
             .as_str()
-        {
-            "replaces_title" => DynamicTitleStyle::ReplacesTitle,
-            "before_title" => DynamicTitleStyle::BeforeTitle,
-            "after_title" => DynamicTitleStyle::AfterTitle,
-            "not_displayed" => DynamicTitleStyle::NotDisplayed,
-            _ => DynamicTitleStyle::default(),
-        }
+            .parse()
+            .unwrap_or_default()
     }
 
     pub fn set_title_style(&self, style: &DynamicTitleStyle) {
@@ -86,19 +80,13 @@ impl GeneralPage {
     }
 
     pub fn tab_position(&self) -> TabPosition {
-        match self
-            .imp()
+        self.imp()
             .tab_position
             .active_id()
-            .unwrap_or(GString::from("top"))
+            .unwrap_or(GString::from(""))
             .as_str()
-        {
-            "top" => TabPosition::Top,
-            "bottom" => TabPosition::Bottom,
-            "left" => TabPosition::Left,
-            "right" => TabPosition::Right,
-            _ => TabPosition::default(),
-        }
+            .parse()
+            .unwrap_or_default()
     }
 
     pub fn set_tab_position(&self, pos: &TabPosition) {

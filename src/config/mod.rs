@@ -50,4 +50,5 @@ pub fn get_config_file() -> PathBuf {
 
 pub struct Config {
     pub general: General,
+    pub text: Text,
 }

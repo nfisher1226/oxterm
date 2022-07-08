@@ -1,6 +1,6 @@
 use {
     serde::{Deserialize, Serialize},
-    std::fmt,
+    std::{error::Error, fmt, str::FromStr},
 };
 
 #[derive(Clone, Default, Deserialize, Serialize)]
@@ -31,13 +31,26 @@ impl fmt::Display for CursorStyle {
     }
 }
 
-impl From<&str> for CursorStyle {
-    fn from(value: &str) -> Self {
-        match value {
-            "Block" | "block" => Self::Block,
-            "Ibeam" | "ibeam" => Self::Ibeam,
-            "Underline" | "underline" => Self::Underline,
-            _ => Self::default(),
+#[derive(Debug)]
+pub struct ParseCursorError;
+
+impl fmt::Display for ParseCursorError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "Error parsing cursor style")
+    }
+}
+
+impl Error for ParseCursorError {}
+
+impl FromStr for CursorStyle {
+    type Err = ParseCursorError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "block" | "Block" => Ok(Self::Block),
+            "ibeam" | "Ibeam" => Ok(Self::Ibeam),
+            "underline" | "Underline" => Ok(Self::Underline),
+            _ => Err(ParseCursorError),
         }
     }
 }

@@ -34,9 +34,10 @@ impl TextPage {
             style: imp
                 .cursor_style
                 .active_id()
-                .unwrap_or(GString::from("Block"))
+                .unwrap_or(GString::from(""))
                 .as_str()
-                .into(),
+                .parse()
+                .unwrap_or_default(),
             blinks: imp.cursor_blinks.is_active(),
         }
     }
@@ -139,7 +140,7 @@ impl TextPage {
         }
     }
 
-    pub fn set_text(&self, text: &Text) {
+    pub fn set_state(&self, text: &Text) {
         self.set_cursor(&text.cursor);
         self.set_scrollback(&text.scrollback);
         self.set_font(&text.font);
