@@ -336,13 +336,3 @@ impl From<&Font> for pango::FontDescription {
         font
     }
 }
-
-#[derive(Clone, Deserialize, Debug, Serialize)]
-pub struct Fonts {
-    pub pg: Font,
-    pub pre: Font,
-    pub quote: Font,
-    pub h1: Font,
-    pub h2: Font,
-    pub h3: Font,
-}
