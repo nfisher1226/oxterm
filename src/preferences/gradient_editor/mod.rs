@@ -2,7 +2,7 @@ mod imp;
 mod stop_editor;
 
 use {
-    crate::config::Stop,
+    crate::{config::Stop, Values},
     gtk::{
         glib::{self, Object},
         prelude::*,
@@ -29,9 +29,9 @@ impl GradientEditor {
     pub fn new() -> Self {
         let obj: Self = Object::new(&[]).expect("Cannot create gradient editor");
         let stop = obj.append_stop();
-        stop.set_stop(&Stop::new(PrimaryColor::Black.into(), Stop::MIN_POSITION));
+        stop.set_values(&Stop::new(PrimaryColor::Black.into(), Stop::MIN_POSITION));
         let stop = obj.append_stop();
-        stop.set_stop(&Stop::new(PrimaryColor::White.into(), Stop::MAX_POSITION));
+        stop.set_values(&Stop::new(PrimaryColor::White.into(), Stop::MAX_POSITION));
         obj
     }
 

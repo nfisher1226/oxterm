@@ -1,7 +1,10 @@
 mod imp;
 
 use {
-    crate::config::{Color, Stop},
+    crate::{
+        config::{Color, Stop},
+        Values,
+    },
     gtk::{
         glib::{self, Object},
         prelude::*,
@@ -40,7 +43,7 @@ impl StopEditor {
 
     pub fn new_with_stop(stop: &Stop) -> Self {
         let ed = Self::new();
-        ed.set_stop(stop);
+        ed.set_values(stop);
         ed
     }
 
@@ -61,18 +64,18 @@ impl StopEditor {
     pub fn set_position(&self, position: f64) {
         self.imp().scale.set_value(position);
     }
-
-    pub fn set_stop(&self, stop: &Stop) {
-        self.set_color(stop.color);
-        self.set_position(stop.position);
-    }
 }
 
-impl From<&StopEditor> for Stop {
-    fn from(editor: &StopEditor) -> Self {
+impl Values<Stop> for StopEditor {
+    fn values(&self) -> Stop {
         Stop {
-            color: editor.button().rgba().into(),
-            position: editor.scale().value(),
+            color: self.button().rgba().into(),
+            position: self.scale().value(),
         }
+    }
+
+    fn set_values(&self, stop: &Stop) {
+        self.set_color(stop.color);
+        self.set_position(stop.position);
     }
 }

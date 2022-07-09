@@ -6,7 +6,7 @@ mod palette_page;
 mod text_page;
 
 use {
-    crate::{config::Config, OxWindow},
+    crate::{config::Config, OxWindow, Values},
     gtk::{
         glib::{self, clone, Object},
         prelude::*,
@@ -60,10 +60,20 @@ impl PreferencesDialog {
             .add_titled(&obj.imp().background_page, Some("background"), "Background");
         obj
     }
+}
 
-    pub fn set_state(&self, cfg: &Config) {
+impl Values<Config> for PreferencesDialog {
+    fn values(&self) -> Config {
         let imp = self.imp();
-        imp.general_page.set_state(&cfg.general);
-        imp.text_page.set_state(&cfg.text);
+        Config {
+            general: imp.general_page.values(),
+            text: imp.text_page.values(),
+        }
+    }
+
+    fn set_values(&self, cfg: &Config) {
+        let imp = self.imp();
+        imp.general_page.set_values(&cfg.general);
+        imp.text_page.set_values(&cfg.text);
     }
 }

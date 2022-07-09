@@ -14,7 +14,7 @@ pub use {
     dynamic_title_style::DynamicTitleStyle,
     font::Font,
     general::General,
-    palette::{Color, Colors, Palette},
+    palette::{Color, ColorPalette, Palette},
     scrollback::Scrollback,
     tab_position::TabPosition,
     text::{Text, TextColor},

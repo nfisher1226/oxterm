@@ -1,7 +1,10 @@
 mod imp;
 
 use {
-    crate::config::{Cursor, Font, Scrollback, Text, TextColor},
+    crate::{
+        config::{Cursor, Font, Scrollback, Text, TextColor},
+        Values,
+    },
     gtk::{
         glib::{self, GString, Object},
         prelude::*,
@@ -130,8 +133,10 @@ impl TextPage {
             }
         }
     }
+}
 
-    pub fn text(&self) -> Text {
+impl Values<Text> for TextPage {
+    fn values(&self) -> Text {
         Text {
             cursor: self.cursor(),
             scrollback: self.scrollback(),
@@ -140,7 +145,7 @@ impl TextPage {
         }
     }
 
-    pub fn set_state(&self, text: &Text) {
+    fn set_values(&self, text: &Text) {
         self.set_cursor(&text.cursor);
         self.set_scrollback(&text.scrollback);
         self.set_font(&text.font);

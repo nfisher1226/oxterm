@@ -1,9 +1,9 @@
 mod imp;
 
 use {
-    crate::config::{Colors, Palette},
+    crate::config::{ColorPalette, Palette},
     gtk::{
-        glib::{self, Object},
+        glib::{self, GString, Object},
         prelude::*,
         subclass::prelude::*,
     },
@@ -29,10 +29,15 @@ impl PalettePage {
     }
 }
 
-impl From<&PalettePage> for Colors {
+impl From<&PalettePage> for ColorPalette {
     fn from(page: &PalettePage) -> Self {
         let imp = page.imp();
         Self {
+            name: imp
+                .palette_selector
+                .active_id()
+                .unwrap_or(GString::from("Default"))
+                .to_string(),
             black: imp.black_color.rgba().into(),
             red: imp.red_color.rgba().into(),
             green: imp.green_color.rgba().into(),

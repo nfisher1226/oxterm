@@ -34,6 +34,12 @@ static SHELL: Lazy<&'static str> = Lazy::new(|| {
     shell.to_str().unwrap_or("/bin/sh")
 });
 
+pub trait Values<V> {
+    fn values(&self) -> V;
+
+    fn set_values(&self, values: &V);
+}
+
 #[must_use]
 pub fn build_ui(app: &gtk::Application) -> Rc<OxWindow> {
     let window = Rc::new(OxWindow::new(app));

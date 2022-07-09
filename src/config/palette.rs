@@ -1,9 +1,15 @@
-use {gtk::gdk, rgba_simple::RGBA};
+use {
+    gtk::gdk,
+    rgba_simple::{PrimaryColor, RGBA},
+    serde::{Deserialize, Serialize},
+};
 
 pub type Color = RGBA<f32>;
 pub type Palette = [gdk::RGBA; 16];
 
-pub struct Colors {
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct ColorPalette {
+    pub name: String,
     pub black: Color,
     pub red: Color,
     pub green: Color,
@@ -22,8 +28,32 @@ pub struct Colors {
     pub white: Color,
 }
 
-impl From<&Colors> for Palette {
-    fn from(colors: &Colors) -> Self {
+impl Default for ColorPalette {
+    fn default() -> Self {
+        Self {
+            name: String::from("NewPalette"),
+            black: PrimaryColor::Black.into(),
+            red: RGBA::new(0.647, 0.114, 0.176, 1.0),
+            green: RGBA::new(0.0, 0.666, 0.0, 1.0),
+            brown: RGBA::new(0.388, 0.270, 0.173, 1.0),
+            blue: RGBA::new(0.0, 0.0, 0.666, 1.0),
+            magenta: RGBA::new(0.666, 0.0, 0.666, 1.0),
+            cyan: RGBA::new(0.0, 0.666, 0.666, 1.0),
+            light_grey: RGBA::new(0.666, 0.666, 0.666, 1.0),
+            dark_grey: RGBA::new(0.333, 0.333, 0.333, 1.0),
+            light_red: RGBA::new(1.0, 0.333, 0.333, 1.0),
+            light_green: RGBA::new(0.333, 1.0, 0.333, 1.0),
+            yellow: RGBA::new(1.0, 0.741, 0.0, 1.0),
+            light_blue: RGBA::new(0.333, 0.333, 1.0, 1.0),
+            light_magenta: RGBA::new(1.0, 0.333, 1.0, 1.0),
+            light_cyan: RGBA::new(0.333, 1.0, 1.0, 1.0),
+            white: PrimaryColor::White.into(),
+        }
+    }
+}
+
+impl From<&ColorPalette> for Palette {
+    fn from(colors: &ColorPalette) -> Self {
         [
             colors.black.into(),
             colors.red.into(),

@@ -1,9 +1,12 @@
 mod imp;
 
-use gtk::{
-    glib::{self, GString, Object},
-    prelude::*,
-    subclass::prelude::*,
+use {
+    crate::Values,
+    gtk::{
+        glib::{self, GString, Object},
+        prelude::*,
+        subclass::prelude::*,
+    },
 };
 
 use crate::config::{DynamicTitleStyle, General, TabPosition};
@@ -97,8 +100,20 @@ impl GeneralPage {
             TabPosition::Right => "right",
         }));
     }
+}
 
-    pub fn set_state(&self, gen: &General) {
+impl Values<General> for GeneralPage {
+    fn values(&self) -> General {
+        let imp = self.imp();
+        General {
+            initial_title: self.initial_title(),
+            title_style: self.title_style(),
+            custom_command: self.custom_command(),
+            tab_position: self.tab_position(),
+        }
+    }
+
+    fn set_values(&self, gen: &General) {
         self.set_initial_title(&gen.initial_title);
         self.set_title_style(&gen.title_style);
         self.set_custom_command(gen.custom_command.clone());
