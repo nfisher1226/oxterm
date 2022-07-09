@@ -9,6 +9,7 @@ edition = "2021"
 clap = "3.2"
 fastrand = "1.7"
 once_cell = "1.12"
+ron = "0.7"
 toml = "0.5"
 
 [dependencies.gtk]

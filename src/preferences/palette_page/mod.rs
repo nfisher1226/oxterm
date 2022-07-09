@@ -1,7 +1,10 @@
 mod imp;
 
 use {
-    crate::config::{ColorPalette, Palette},
+    crate::{
+        config::{ColorPalette, Palette},
+        Values,
+    },
     gtk::{
         glib::{self, GString, Object},
         prelude::*,
@@ -29,10 +32,10 @@ impl PalettePage {
     }
 }
 
-impl From<&PalettePage> for ColorPalette {
-    fn from(page: &PalettePage) -> Self {
-        let imp = page.imp();
-        Self {
+impl Values<ColorPalette> for PalettePage {
+    fn values(&self) -> ColorPalette {
+        let imp = self.imp();
+        ColorPalette {
             name: imp
                 .palette_selector
                 .active_id()
@@ -55,6 +58,27 @@ impl From<&PalettePage> for ColorPalette {
             light_cyan: imp.light_cyan_color.rgba().into(),
             white: imp.white_color.rgba().into(),
         }
+    }
+
+    fn set_values(&self, values: &ColorPalette) {
+        let imp = self.imp();
+        imp.palette_selector.set_active_id(Some(&values.name));
+        imp.black_color.set_rgba(&values.black.into());
+        imp.red_color.set_rgba(&values.red.into());
+        imp.green_color.set_rgba(&values.green.into());
+        imp.brown_color.set_rgba(&values.brown.into());
+        imp.blue_color.set_rgba(&values.blue.into());
+        imp.magenta_color.set_rgba(&values.magenta.into());
+        imp.cyan_color.set_rgba(&values.cyan.into());
+        imp.light_grey_color.set_rgba(&values.light_grey.into());
+        imp.dark_grey_color.set_rgba(&values.dark_grey.into());
+        imp.light_red_color.set_rgba(&values.light_red.into());
+        imp.light_green_color.set_rgba(&values.light_green.into());
+        imp.yellow_color.set_rgba(&values.yellow.into());
+        imp.light_blue_color.set_rgba(&values.light_blue.into());
+        imp.light_magenta_color.set_rgba(&values.light_magenta.into());
+        imp.light_cyan_color.set_rgba(&values.light_cyan.into());
+        imp.white_color.set_rgba(&values.white.into());
     }
 }
 

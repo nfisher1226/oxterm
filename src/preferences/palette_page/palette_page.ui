@@ -141,7 +141,7 @@
       <object class="GtkColorButton" id="light_red_color">
         <property name="tooltip-text" translatable="yes">Light Red</property>
         <property name="hexpand">True</property>
-        <property name="rgba">rgb(288,85,85)</property>
+        <property name="rgba">rgb(255,85,85)</property>
         <layout>
           <property name="column">1</property>
           <property name="row">2</property>

@@ -1,7 +1,11 @@
+use std::{fs, io::BufWriter};
+
 use {
     gtk::gdk,
     rgba_simple::{PrimaryColor, RGBA},
+    ron::ser::PrettyConfig,
     serde::{Deserialize, Serialize},
+    super::ConfigError,
 };
 
 pub type Color = RGBA<f32>;
@@ -31,7 +35,7 @@ pub struct ColorPalette {
 impl Default for ColorPalette {
     fn default() -> Self {
         Self {
-            name: String::from("NewPalette"),
+            name: String::from("Default"),
             black: PrimaryColor::Black.into(),
             red: RGBA::new(0.647, 0.114, 0.176, 1.0),
             green: RGBA::new(0.0, 0.666, 0.0, 1.0),
@@ -72,5 +76,36 @@ impl From<&ColorPalette> for Palette {
             colors.light_cyan.into(),
             colors.white.into(),
         ]
+    }
+}
+
+impl ColorPalette {
+    pub fn new_from(name: &str, palette: Self) -> Self {
+        Self {
+            name: name.to_string(),
+            ..palette
+        }
+    }
+
+    pub fn load(name: &str) -> Result<Self, ConfigError> {
+        let mut file = super::get_config_dir();
+        file.push("palettes");
+        file.push(name);
+        let contents = fs::read_to_string(file)?;
+        let cp = ron::de::from_str(&contents)?;
+        Ok(cp)
+    }
+
+    pub fn save(&self) -> Result<(), ConfigError> {
+        let mut file = super::get_config_dir();
+        file.push("palettes");
+        file.push(&self.name);
+        let pcfg = PrettyConfig::new()
+            .struct_names(true)
+            .decimal_floats(true);
+        let file = fs::File::open(&file)?;
+        let buf = BufWriter::new(file);
+        ron::ser::to_writer_pretty(buf, self, pcfg)?;
+        Ok(())
     }
 }

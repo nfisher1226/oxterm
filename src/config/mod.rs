@@ -22,7 +22,7 @@ pub use {
 
 use {
     gtk::glib,
-    std::{fs, path::PathBuf},
+    std::{error::Error, fmt, fs, io, path::PathBuf},
 };
 /// Returns an OS appropriate configuration directory path
 ///
@@ -46,6 +46,42 @@ pub fn get_config_file() -> PathBuf {
     let mut file = get_config_dir();
     file.push("config.toml");
     file
+}
+
+#[derive(Debug)]
+pub enum ConfigError {
+    Io(io::Error),
+    Format(ron::error::Error),
+}
+
+impl fmt::Display for ConfigError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Io(e) => write!(f, "{e}"),
+            Self::Format(e) => write!(f, "{e}"),
+        }
+    }
+}
+
+impl From<io::Error> for ConfigError {
+    fn from(err: io::Error) -> Self {
+        Self::Io(err)
+    }
+}
+
+impl From<ron::error::Error> for ConfigError {
+    fn from(err: ron::error::Error) -> Self {
+        Self::Format(err)
+    }
+}
+
+impl Error for ConfigError {
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
+        match self {
+            Self::Io(e) => Some(e),
+            Self::Format(e) => Some(e),
+        }
+    }
 }
 
 pub struct Config {
