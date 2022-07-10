@@ -14,7 +14,8 @@ use {
     },
 };
 pub use {
-    background_page::BackgroundPage, general_page::GeneralPage, palette_page::PalettePage,
+    background_page::BackgroundPage, general_page::GeneralPage,
+    gradient_editor::GradientEditor, palette_page::PalettePage,
     text_page::TextPage,
 };
 
