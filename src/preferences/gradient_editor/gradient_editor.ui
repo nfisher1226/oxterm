@@ -6,10 +6,17 @@
     <property name="lower">2</property>
     <property name="step-increment">1</property>
   </object>
+  <object class="GtkAdjustment" id="degrees_adjustment">
+    <property name="upper">360</property>
+    <property name="value">115</property>
+    <property name="lower">0</property>
+    <property name="step-increment">2</property>
+    <property name="page-increment">10</property>
+  </object>
   <template class="GradientEditor" parent="GtkGrid">
     <property name="hexpand">True</property>
-    <property name="row-spacing">2</property>
-    <property name="column-spacing">5</property>
+    <property name="row-spacing">5</property>
+    <property name="column-spacing">10</property>
     <child>
       <object class="GtkLabel">
         <property name="halign">start</property>
@@ -34,7 +41,7 @@
         <layout>
           <property name="column">2</property>
           <property name="row">0</property>
-          <property name="column-span">4</property>
+          <property name="column-span">2</property>
         </layout>
       </object>
     </child>
@@ -43,38 +50,43 @@
         <layout>
           <property name="column">0</property>
           <property name="row">1</property>
-          <property name="column-span">3</property>
+          <property name="column-span">2</property>
         </layout>
         <child>
-          <object class="GtkLabel" id="start_position">
-            <property name="label">Start Position</property>
+          <object class="GtkStackPage">
+            <property name="name">end_position</property>
+            <property name="child">
+              <object class="GtkBox">
+                <property name="spacing">5</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label">Direction</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkComboBoxText" id="direction_type">
+                    <property name="tooltip-text" translatable="yes">A linear gradient can run between a start and end point or can begin at a starting point and extend in a specified angle.</property>
+                    <property name="halign">fill</property>
+                    <property name="hexpand">True</property>
+                    <items>
+                      <item id="angle" translatable="yes">Angle</item>
+                      <item id="edge" translatable="yes">Edge</item>
+                    </items>
+                  </object>
+                </child>
+              </object>
+            </property>
           </object>
         </child>
         <child>
-          <object class="GtkGrid" id="end_position">
-            <child>
+          <object class="GtkStackPage">
+            <property name="name">start_position</property>
+            <property name="child">
               <object class="GtkLabel">
-                <property name="label">Direction</property>
-                <layout>
-                  <property name="column">0</property>
-                  <property name="row">0</property>
-                </layout>
+                <property name="label">Start Position</property>
+                <property name="halign">start</property>
               </object>
-            </child>
-            <child>
-              <object class="GtkComboBoxText" id="direction_type">
-                <property name="tooltip-text" translatable="yes">A linear gradient can run between a start and end point or can begin at a starting point and extend in a specified angle.</property>
-                <property name="active-id">angle</property>
-                <items>
-                  <item id="angle" translatable="yes">Angle</item>
-                  <item id="edge" translatable="yes">Edge</item>
-                </items>
-                <layout>
-                  <property name="column">1</property>
-                  <property name="row">0</property>
-                </layout>
-              </object>
-            </child>
+            </property>
           </object>
         </child>
       </object>
@@ -82,65 +94,72 @@
     <child>
       <object class="GtkStack" id="direction_stack">
         <layout>
-          <property name="column">1</property>
+          <property name="column">2</property>
           <property name="row">1</property>
-          <property name="column-span">3</property>
+          <property name="column-span">2</property>
         </layout>
         <child>
-          <object class="GtkGrid" id="angle_grid">
-            <child>
-              <object class="GtkLabel">
-                <property name="label">Degrees</property>
-                <layout>
-                  <property name="column">0</property>
-                  <property name="row">0</property>
-                </layout>
+          <object class="GtkStackPage">
+            <property name="name">angle_page</property>
+            <property name="child">
+              <object class="GtkBox">
+                <property name="spacing">5</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label">Degrees:</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkSpinButton" id="degrees">
+                    <property name="tooltip-text" translatable="yes">The angle the gradient travels away from it's starting location.</property>
+                    <property name="halign">fill</property>
+                    <property name="hexpand">True</property>
+                  </object>
+                </child>
               </object>
-            </child>
-            <child>
-              <object class="GtkSpinButton" id="degrees">
-                <property name="tooltip-text" translatable="yes">The angle the gradient travels away from it's starting location.</property>
-                <property name="value">115</property>
-                <layout>
-                  <property name="column">1</property>
-                  <property name="row">0</property>
-                </layout>
-              </object>
-            </child>
+            </property>
           </object>
         </child>
         <child>
-          <object class="GtkGrid" id="edge_grid">
-            <child>
-              <object class="GtkComboBoxText" id="vertical_position">
-                <property name="tooltip-text" translatable="yes">The location along the vertical axis of the gradient.</property>
-                <property name="active-id">top</property>
-                <items>
-                  <item id="top" translatable="yes">Top</item>
-                  <item id="center" translatable="yes">Center</item>
-                  <item id="bottom" translatable="yes">Bottom</item>
-                </items>
-                <layout>
-                  <property name="column">0</property>
-                  <property name="row">0</property>
-                </layout>
+          <object class="GtkStackPage">
+            <property name="name">edge_page</property>
+            <property name="child">
+              <object class="GtkGrid" id="edge_grid">
+                <property name="column-spacing">5</property>
+                <child>
+                  <object class="GtkComboBoxText" id="vertical_position">
+                    <property name="tooltip-text" translatable="yes">The location along the vertical axis of the gradient.</property>
+                    <property name="halign">fill</property>
+                    <property name="hexpand">True</property>
+                    <items>
+                      <item id="top" translatable="yes">Top</item>
+                      <item id="center" translatable="yes">Center</item>
+                      <item id="bottom" translatable="yes">Bottom</item>
+                    </items>
+                    <layout>
+                      <property name="column">0</property>
+                      <property name="row">0</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkComboBoxText" id="horizontal_position">
+                    <property name="tooltip-text" translatable="yes">The location along the horizontal axis of the gradient.</property>
+                    <property name="halign">fill</property>
+                    <property name="hexpand">True</property>
+                    <items>
+                      <item id="left" translatable="yes">Left</item>
+                      <item id="center" translatable="yes">Center</item>
+                      <item id="right" translatable="yes">Right</item>
+                    </items>
+                    <layout>
+                      <property name="column">1</property>
+                      <property name="row">0</property>
+                    </layout>
+                  </object>
+                </child>
               </object>
-            </child>
-            <child>
-              <object class="GtkComboBoxText" id="horizontal_position">
-                <property name="tooltip-text" translatable="yes">The location along the horizontal axis of the gradient.</property>
-                <property name="active-id">left</property>
-                <items>
-                  <item id="top" translatable="yes">Left</item>
-                  <item id="center" translatable="yes">Center</item>
-                  <item id="bottom" translatable="yes">Right</item>
-                </items>
-                <layout>
-                  <property name="column">1</property>
-                  <property name="row">0</property>
-                </layout>
-              </object>
-            </child>
+            </property>
           </object>
         </child>
       </object>
@@ -157,7 +176,7 @@
     <child>
       <object class="GtkSpinButton" id="num_stops">
         <property name="tooltip-text" translatable="yes">The number of different color stops used to define the gradient.</property>
-	<property name="adjustment">numstops_adjustment</property>
+        <property name="adjustment">numstops_adjustment</property>
         <property name="numeric">1</property>
         <layout>
           <property name="column">1</property>
@@ -178,9 +197,9 @@
     <child>
       <object class="GtkStack" id="stops_stack">
         <layout>
-          <property name="column">4</property>
-          <property name="row">2</property>
-          <property name="column-span">3</property>
+          <property name="column">0</property>
+          <property name="row">3</property>
+          <property name="column-span">2</property>
         </layout>
       </object>
     </child>

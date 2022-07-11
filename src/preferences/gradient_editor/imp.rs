@@ -17,19 +17,11 @@ pub struct GradientEditor {
     #[template_child]
     pub position_type_stack: TemplateChild<gtk::Stack>,
     #[template_child]
-    pub start_position: TemplateChild<gtk::Label>,
-    #[template_child]
-    pub end_position: TemplateChild<gtk::Grid>,
-    #[template_child]
     pub direction_type: TemplateChild<gtk::ComboBoxText>,
     #[template_child]
     pub direction_stack: TemplateChild<gtk::Stack>,
     #[template_child]
-    pub angle_grid: TemplateChild<gtk::Grid>,
-    #[template_child]
     pub degrees: TemplateChild<gtk::SpinButton>,
-    #[template_child]
-    pub edge_grid: TemplateChild<gtk::Grid>,
     #[template_child]
     pub vertical_position: TemplateChild<gtk::ComboBoxText>,
     #[template_child]
@@ -61,6 +53,10 @@ impl ObjectSubclass for GradientEditor {
 impl ObjectImpl for GradientEditor {
     fn constructed(&self, obj: &Self::Type) {
         self.parent_constructed(obj);
+        self.gradient_kind.set_active_id(Some("linear"));
+        self.direction_type.set_active_id(Some("angle"));
+        self.vertical_position.set_active_id(Some("top"));
+        self.horizontal_position.set_active_id(Some("left"));
     }
 }
 
