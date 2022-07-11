@@ -1,11 +1,11 @@
 use std::{fs, io::BufWriter};
 
 use {
+    super::ConfigError,
     gtk::gdk,
     rgba_simple::{PrimaryColor, RGBA},
     ron::ser::PrettyConfig,
     serde::{Deserialize, Serialize},
-    super::ConfigError,
 };
 
 pub type Color = RGBA<f32>;
@@ -100,9 +100,7 @@ impl ColorPalette {
         let mut file = super::get_config_dir();
         file.push("palettes");
         file.push(&self.name);
-        let pcfg = PrettyConfig::new()
-            .struct_names(true)
-            .decimal_floats(true);
+        let pcfg = PrettyConfig::new().struct_names(true).decimal_floats(true);
         let file = fs::File::open(&file)?;
         let buf = BufWriter::new(file);
         ron::ser::to_writer_pretty(buf, self, pcfg)?;

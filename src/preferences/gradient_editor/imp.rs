@@ -1,7 +1,7 @@
 use {
     super::stop_editor::StopEditor,
     gtk::{
-        glib::{self, subclass::InitializingObject},
+        glib::{self, clone, subclass::InitializingObject},
         prelude::*,
         subclass::prelude::*,
         CompositeTemplate,
@@ -57,6 +57,33 @@ impl ObjectImpl for GradientEditor {
         self.direction_type.set_active_id(Some("angle"));
         self.vertical_position.set_active_id(Some("top"));
         self.horizontal_position.set_active_id(Some("left"));
+        self.gradient_kind
+            .connect_changed(clone!(@strong self.position_type_stack as pstack,
+                @strong self.direction_stack as dstack,
+                @strong self.direction_type as dtype => move |gkind| {
+                if let Some(name) = gkind.active_id() {
+                    match name.as_str() {
+                        "linear" => {
+                            pstack.set_visible_child_name("end_position");
+                            if let Some(name) = dtype.active_id() {
+                                dstack.set_visible_child_name(name.as_str());
+                            }
+                        },
+                        "elliptical" | "radial" => {
+                            pstack.set_visible_child_name("start_position");
+                            dstack.set_visible_child_name("edge");
+                        },
+                        _ => {},
+                    }
+                }
+            }));
+        self.direction_type.connect_changed(
+            clone!(@strong self.direction_stack as stack => move |dtype| {
+                if let Some(name) = dtype.active_id() {
+                    stack.set_visible_child_name(name.as_str());
+                }
+            }),
+        );
     }
 }
 

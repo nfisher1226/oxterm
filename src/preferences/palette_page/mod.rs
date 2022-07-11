@@ -76,7 +76,8 @@ impl Values<ColorPalette> for PalettePage {
         imp.light_green_color.set_rgba(&values.light_green.into());
         imp.yellow_color.set_rgba(&values.yellow.into());
         imp.light_blue_color.set_rgba(&values.light_blue.into());
-        imp.light_magenta_color.set_rgba(&values.light_magenta.into());
+        imp.light_magenta_color
+            .set_rgba(&values.light_magenta.into());
         imp.light_cyan_color.set_rgba(&values.light_cyan.into());
         imp.white_color.set_rgba(&values.white.into());
     }

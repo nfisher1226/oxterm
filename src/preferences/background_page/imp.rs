@@ -1,12 +1,11 @@
 use {
     crate::preferences::GradientEditor,
     gtk::{
-        glib::{self, clone, GString, subclass::InitializingObject},
+        glib::{self, clone, subclass::InitializingObject, GString},
         prelude::*,
         subclass::prelude::*,
         CompositeTemplate,
     },
-    super::{ColorPage, ImagePage},
 };
 
 #[derive(CompositeTemplate, Default)]
@@ -18,8 +17,10 @@ pub struct BackgroundPage {
     pub transparency: TemplateChild<gtk::Scale>,
     #[template_child]
     pub stack: TemplateChild<gtk::Stack>,
-    pub color_page: ColorPage,
-    pub image_page: ImagePage,
+    #[template_child]
+    pub color_type: TemplateChild<gtk::ComboBoxText>,
+    #[template_child]
+    pub color_button: TemplateChild<gtk::ColorButton>,
     pub gradient_editor: GradientEditor,
 }
 
@@ -41,10 +42,23 @@ impl ObjectSubclass for BackgroundPage {
 impl ObjectImpl for BackgroundPage {
     fn constructed(&self, obj: &Self::Type) {
         self.parent_constructed(obj);
-        self.stack.add_child(&self.color_page);
-        self.stack.add_child(&self.image_page);
-        self.stack.add_child(&self.gradient_editor);
+        self.color_type.set_active_id(Some("black"));
+        self.color_type
+            .connect_changed(clone!(@strong self.color_button as but => move |ct| {
+                match ct.active_id().unwrap_or(GString::from("")).as_str() {
+                    "custom" => but.set_sensitive(true),
+                    _ => but.set_sensitive(false),
+                }
+            }));
+        self.stack
+            .add_named(&self.gradient_editor, Some("gradient"));
         self.background_type.set_active_id(Some("solid_color"));
+        self.background_type
+            .connect_changed(clone!(@strong self.stack as stack => move |btype| {
+                if let Some(name) = btype.active_id() {
+                    stack.set_visible_child_name(name.as_str());
+                }
+            }));
     }
 }
 

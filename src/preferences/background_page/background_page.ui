@@ -70,6 +70,62 @@
           <property name="row">2</property>
           <property name="column-span">2</property>
         </layout>
+        <child>
+          <object class="GtkStackPage">
+            <property name="name">solid_color</property>
+            <property name="child">
+              <object class="GtkBox">
+                <property name="orientation">horizontal</property>
+                <property name="halign">fill</property>
+                <property name="hexpand">True</property>
+                <property name="valign">start</property>
+                <property name="vexpand">False</property>
+                <property name="homogeneous">True</property>
+                <property name="spacing">10</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="halign">start</property>
+                    <property name="label">Color:</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkComboBoxText" id="color_type">
+                    <property name="tooltip-text" translatable="yes">When set to Black or White, the text color is taken from the current palette's black or white color.</property>
+                    <property name="halign">fill</property>
+                    <property name="hexpand">True</property>
+                    <items>
+                      <item id="black">Black</item>
+                      <item id="white">White</item>
+                      <item id="custom">Custom</item>
+                    </items>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkColorButton" id="color_button">
+                    <property name="rgba">rgb(0,0,0)</property>
+                    <property name="halign">start</property>
+                    <property name="sensitive">False</property>
+                  </object>
+                </child>
+              </object>
+            </property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkStackPage">
+            <property name="name">image</property>
+            <property name="child">
+  <object class="GtkGrid">
+    <property name="halign">fill</property>
+    <property name="hexpand">True</property>
+    <property name="valign">start</property>
+    <property name="vexpand">False</property>
+    <property name="column-spacing">10</property>
+    <property name="row-spacing">10</property>
+  </object>
+            </property>
+          </object>
+        </child>
       </object>
     </child>
   </template>
