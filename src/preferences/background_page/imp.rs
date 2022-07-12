@@ -6,6 +6,7 @@ use {
         subclass::prelude::*,
         CompositeTemplate,
     },
+    gtk4_file_chooser_button::FileChooserButton,
 };
 
 #[derive(CompositeTemplate, Default)]
@@ -21,6 +22,11 @@ pub struct BackgroundPage {
     pub color_type: TemplateChild<gtk::ComboBoxText>,
     #[template_child]
     pub color_button: TemplateChild<gtk::ColorButton>,
+    #[template_child]
+    pub image_grid: TemplateChild<gtk::Grid>,
+    #[template_child]
+    pub image_style: TemplateChild<gtk::ComboBoxText>,
+    pub image_file: FileChooserButton,
     pub gradient_editor: GradientEditor,
 }
 
@@ -59,6 +65,10 @@ impl ObjectImpl for BackgroundPage {
                     stack.set_visible_child_name(name.as_str());
                 }
             }));
+        self.image_style.set_active_id(Some("tiled"));
+        self.image_grid.attach(&self.image_file, 1, 0, 1, 1);
+        self.image_file
+            .set_tooltip_text(Some("Choose and image file to use as a background"));
     }
 }
 

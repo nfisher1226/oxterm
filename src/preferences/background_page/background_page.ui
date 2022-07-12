@@ -115,14 +115,49 @@
           <object class="GtkStackPage">
             <property name="name">image</property>
             <property name="child">
-  <object class="GtkGrid">
-    <property name="halign">fill</property>
-    <property name="hexpand">True</property>
-    <property name="valign">start</property>
-    <property name="vexpand">False</property>
-    <property name="column-spacing">10</property>
-    <property name="row-spacing">10</property>
-  </object>
+              <object class="GtkGrid" id="image_grid">
+                <property name="halign">fill</property>
+                <property name="hexpand">True</property>
+                <property name="valign">start</property>
+                <property name="vexpand">False</property>
+                <property name="column-spacing">10</property>
+                <property name="row-spacing">10</property>
+		<child>
+                  <object class="GtkLabel">
+                    <property name="halign">start</property>
+		    <property name="label">File:</property>
+		    <layout>
+                      <property name="column">0</property>
+		      <property name="row">0</property>
+		    </layout>
+		  </object>
+		</child>
+		<child>
+                  <object class="GtkLabel">
+                    <property name="halign">start</property>
+		    <property name="label">Style:</property>
+		    <layout>
+                      <property name="column">0</property>
+		      <property name="row">1</property>
+		    </layout>
+		  </object>
+		</child>
+		<child>
+                  <object class="GtkComboBoxText" id="image_style">
+                    <property name="tooltip-text">How the image should be scaled or cropped to fit the terminal window</property>
+		    <items>
+                      <item id="tiled">Tiled</item>
+                      <item id="centered">Centered</item>
+                      <item id="scaled">Scaled</item>
+                      <item id="stretched">Stretched</item>
+                    </items>
+                    <layout>
+                      <property name="column">1</property>
+		      <property name="row">1</property>
+		    </layout>
+		  </object>
+		</child>
+              </object>
             </property>
           </object>
         </child>

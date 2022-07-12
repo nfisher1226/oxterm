@@ -4,7 +4,7 @@ mod stop_editor;
 use {
     crate::{config::Stop, Values},
     gtk::{
-        glib::{self, clone, GString, Object},
+        glib::{self, clone, Object},
         prelude::*,
         subclass::prelude::*,
     },
@@ -35,23 +35,15 @@ impl GradientEditor {
             .set_active_id(Some(stop.widget_name().as_str()));
         let stop = obj.append_stop();
         stop.set_values(&Stop::new(PrimaryColor::White.into(), Stop::MAX_POSITION));
-        imp.stop_selector
-            .connect_changed(clone!(@strong obj as s => move |sel| {
-                if let Some(name) = sel.active_id() {
-                    if let Some(stop) = s.imp().stops.borrow().get(name.as_str()) {
-                        s.imp().stops_stack.set_visible_child(stop);
-                    }
-                }
-            }));
         imp.num_stops
-            .connect_value_changed(clone!(@strong obj as s => move |ns| {
-                let old = { s.imp().stops.borrow().values().len() };
+            .connect_value_changed(clone!(@strong obj as editor => move |ns| {
+                let old = { editor.imp().stops.borrow().values().len() };
                 let new = ns.value();
                 if new > old as f64 {
-                    let _stop = s.append_stop();
+                    let _stop = editor.append_stop();
                 } else if new < old as f64 {
-                    if let Some(name) = s.imp().stop_selector.active_id() {
-                        s.remove_stop(name.as_str());
+                    if let Some(name) = editor.imp().stop_selector.active_id() {
+                        editor.remove_stop(name.as_str());
                     }
                 }
             }));
@@ -61,7 +53,7 @@ impl GradientEditor {
     pub fn append_stop(&self) -> StopEditor {
         let stop_editor = StopEditor::new();
         let name = stop_editor.widget_name().to_string();
-        let _page = self.imp().stops_stack.add_child(&stop_editor);
+        let _page = self.imp().stops_stack.add_named(&stop_editor, Some(&name));
         self.imp()
             .stops
             .borrow_mut()

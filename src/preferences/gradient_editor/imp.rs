@@ -84,6 +84,13 @@ impl ObjectImpl for GradientEditor {
                 }
             }),
         );
+        self.stop_selector.connect_changed(
+            clone!(@strong self.stops_stack as stack => move |sel| {
+                if let Some(name) = sel.active_id() {
+                    stack.set_visible_child_name(name.as_str());
+                }
+            }),
+        );
     }
 }
 

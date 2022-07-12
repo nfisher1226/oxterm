@@ -1,9 +1,12 @@
 mod imp;
 
-use gtk::{
-    glib::{self, Object},
-    prelude::*,
-    subclass::prelude::*,
+use {
+    gtk::{
+        glib::{self, Object},
+        prelude::*,
+        subclass::prelude::*,
+    },
+    gtk4_file_chooser_button::FileChooserButton,
 };
 
 glib::wrapper! {
@@ -24,5 +27,9 @@ impl BackgroundPage {
     pub fn new() -> Self {
         let obj: Self = Object::new(&[]).expect("Cannot create background page");
         obj
+    }
+
+    pub fn image_file(&self) -> FileChooserButton {
+        self.imp().image_file.clone()
     }
 }

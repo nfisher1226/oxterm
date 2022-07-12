@@ -104,7 +104,6 @@ impl GeneralPage {
 
 impl Values<General> for GeneralPage {
     fn values(&self) -> General {
-        let imp = self.imp();
         General {
             initial_title: self.initial_title(),
             title_style: self.title_style(),

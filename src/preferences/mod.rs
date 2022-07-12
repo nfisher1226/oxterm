@@ -58,7 +58,15 @@ impl PreferencesDialog {
         obj.imp()
             .stack
             .add_titled(&obj.imp().background_page, Some("background"), "Background");
+        obj.background_page()
+            .image_file()
+            .dialog()
+            .set_transient_for(Some(&obj));
         obj
+    }
+
+    pub fn background_page(&self) -> BackgroundPage {
+        self.imp().background_page.clone()
     }
 }
 
