@@ -3,7 +3,7 @@ mod cursor;
 mod dynamic_title_style;
 mod font;
 mod general;
-mod palette;
+pub mod palette;
 mod scrollback;
 mod tab_position;
 mod text;
@@ -59,6 +59,11 @@ pub fn get_data_dir() -> PathBuf {
     datadir.push(progname);
     if !datadir.exists() {
         fs::create_dir_all(&datadir.to_str().unwrap()).unwrap_or_else(|e| eprintln!("{}", e));
+        let mut default_palette = datadir.clone();
+        default_palette.push("default.ron");
+        if !default_palette.exists() {
+            ColorPalette::default().save().unwrap_or_else(|e| eprintln!("{}", e));
+        }
     }
     datadir
 }

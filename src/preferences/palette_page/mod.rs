@@ -30,6 +30,12 @@ impl PalettePage {
     pub fn new() -> Self {
         Object::new(&[]).expect("Cannot create palette page")
     }
+
+    pub fn set_palette_list(&self) {
+        for palette in &crate::config::palette::get_palette_names() {
+            self.imp().palette_selector.append(Some(&palette.0), &palette.1);
+        }
+    }
 }
 
 impl Values<ColorPalette> for PalettePage {

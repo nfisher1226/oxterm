@@ -107,3 +107,20 @@ impl ColorPalette {
         Ok(())
     }
 }
+
+pub fn get_palette_names() -> Vec<(String,String)> {
+    let mut palettes = vec![];
+    if let Ok(dir) = fs::read_dir(super::get_data_dir()) {
+        for file in dir {
+            if let Ok(file) = file {
+                if let Some(name) = file.path().file_name() {
+                    let name = name.to_string_lossy().to_string();
+                    if let Ok(palette) = ColorPalette::load(&name) {
+                        palettes.push((name, palette.name));
+                    }
+                }
+            }
+        }
+    }
+    palettes
+}
