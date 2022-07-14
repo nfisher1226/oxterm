@@ -62,7 +62,9 @@ pub fn get_data_dir() -> PathBuf {
         let mut default_palette = datadir.clone();
         default_palette.push("default.ron");
         if !default_palette.exists() {
-            ColorPalette::default().save().unwrap_or_else(|e| eprintln!("{}", e));
+            ColorPalette::default()
+                .save()
+                .unwrap_or_else(|e| eprintln!("{}", e));
         }
     }
     datadir

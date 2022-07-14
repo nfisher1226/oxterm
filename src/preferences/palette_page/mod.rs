@@ -6,7 +6,7 @@ use {
         Values,
     },
     gtk::{
-        glib::{self, GString, Object},
+        glib::{self, clone, GString, Object},
         prelude::*,
         subclass::prelude::*,
     },
@@ -28,12 +28,55 @@ impl Default for PalettePage {
 impl PalettePage {
     #[must_use]
     pub fn new() -> Self {
-        Object::new(&[]).expect("Cannot create palette page")
+        let obj: Self = Object::new(&[]).expect("Cannot create palette page");
+        obj.imp().new_palette_name.connect_activate(
+            clone!(@weak obj as palette_page => move |entry| {
+                let mut new_palette = palette_page.values();
+                new_palette.name = entry.text().to_string();
+                if let Err(e) = new_palette.save() {
+                    eprintln!("{e}");
+                }
+                palette_page
+                    .imp()
+                    .palette_selector
+                    .append(Some(&new_palette.name.to_lowercase()), &new_palette.name);
+                palette_page.set_values(&new_palette);
+                palette_page.imp().new_popover.popdown();
+            }),
+        );
+        let imp = obj.imp();
+        for button in &[
+            &imp.black_color,
+            &imp.red_color,
+            &imp.green_color,
+            &imp.brown_color,
+            &imp.blue_color,
+            &imp.magenta_color,
+            &imp.cyan_color,
+            &imp.light_grey_color,
+            &imp.dark_grey_color,
+            &imp.light_red_color,
+            &imp.light_green_color,
+            &imp.yellow_color,
+            &imp.light_blue_color,
+            &imp.light_magenta_color,
+            &imp.light_cyan_color,
+            &imp.white_color,
+        ] {
+            button.connect_color_set(clone!(@weak obj as palette_page => move |_| {
+                if let Err(e) = palette_page.values().save() {
+                    eprintln!("{e}");
+                }
+            }));
+        }
+        obj
     }
 
     pub fn set_palette_list(&self) {
         for palette in &crate::config::palette::get_palette_names() {
-            self.imp().palette_selector.append(Some(&palette.0), &palette.1);
+            self.imp()
+                .palette_selector
+                .append(Some(&palette.0), &palette.1);
         }
     }
 }
@@ -68,7 +111,8 @@ impl Values<ColorPalette> for PalettePage {
 
     fn set_values(&self, values: &ColorPalette) {
         let imp = self.imp();
-        imp.palette_selector.set_active_id(Some(&values.name));
+        imp.palette_selector
+            .set_active_id(Some(&values.name.to_lowercase()));
         imp.black_color.set_rgba(&values.black.into());
         imp.red_color.set_rgba(&values.red.into());
         imp.green_color.set_rgba(&values.green.into());

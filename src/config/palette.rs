@@ -99,16 +99,20 @@ impl ColorPalette {
     pub fn save(&self) -> Result<(), ConfigError> {
         let mut file = super::get_data_dir();
         file.push("palettes");
-        file.push(&self.name);
+        if !file.exists() {
+            fs::create_dir_all(&file)?;
+        }
+        file.push(&self.name.to_lowercase());
+        file.set_extension("ron");
         let pcfg = PrettyConfig::new().struct_names(true).decimal_floats(true);
-        let file = fs::File::open(&file)?;
+        let file = fs::File::create(&file)?;
         let buf = BufWriter::new(file);
         ron::ser::to_writer_pretty(buf, self, pcfg)?;
         Ok(())
     }
 }
 
-pub fn get_palette_names() -> Vec<(String,String)> {
+pub fn get_palette_names() -> Vec<(String, String)> {
     let mut palettes = vec![];
     if let Ok(dir) = fs::read_dir(super::get_data_dir()) {
         for file in dir {

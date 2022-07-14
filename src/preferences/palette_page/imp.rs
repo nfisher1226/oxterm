@@ -9,9 +9,13 @@ use gtk::{
 #[template(file = "palette_page.ui")]
 pub struct PalettePage {
     #[template_child]
+    pub new_popover: TemplateChild<gtk::Popover>,
+    #[template_child]
+    pub new_palette_name: TemplateChild<gtk::Entry>,
+    #[template_child]
     pub palette_selector: TemplateChild<gtk::ComboBoxText>,
     #[template_child]
-    pub add_palette: TemplateChild<gtk::Button>,
+    pub add_palette: TemplateChild<gtk::MenuButton>,
     #[template_child]
     pub remove_palette: TemplateChild<gtk::Button>,
     #[template_child]

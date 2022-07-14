@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
+  <object class="GtkPopover" id="new_popover">
+    <child>
+      <object class="GtkEntry" id="new_palette_name">
+        <property name="placeholder-text">Name for new palette</property>
+      </object>
+    </child>
+  </object>
   <template class="PalettePage" parent="GtkGrid">
     <property name="halign">fill</property>
     <property name="hexpand">1</property>
@@ -25,9 +32,10 @@
           </object>
         </child>
         <child>
-          <object class="GtkButton" id="add_palette">
+          <object class="GtkMenuButton" id="add_palette">
             <property name="tooltip-text">Create a new color palette</property>
             <property name="label">New</property>
+	    <property name="popover">new_popover</property>
           </object>
         </child>
         <child>
