@@ -2,7 +2,7 @@ use {
     crate::config::Color,
     rgba_simple::{PrimaryColor, RGBA},
     serde::{Deserialize, Serialize},
-    std::cmp::Ordering,
+    std::{cmp::Ordering, error::Error, fmt, str::FromStr},
 };
 
 #[derive(Default, Deserialize, Serialize)]
@@ -13,12 +13,77 @@ pub enum VerticalPlacement {
     Bottom,
 }
 
+#[derive(Debug)]
+pub struct ParsePlacementError;
+
+impl fmt::Display for ParsePlacementError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "Error parsing placement")
+    }
+}
+
+impl Error for ParsePlacementError {}
+
+impl fmt::Display for VerticalPlacement {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                Self::Top => "Top",
+                Self::Center => "Center",
+                Self::Bottom => "Bottom",
+            }
+        )
+    }
+}
+
+impl FromStr for VerticalPlacement {
+    type Err = ParsePlacementError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "Top" | "top" => Ok(Self::Top),
+            "Center" | "center" => Ok(Self::Center),
+            "Bottom" | "bottom" => Ok(Self::Bottom),
+            _ => Err(ParsePlacementError),
+        }
+    }
+}
+
 #[derive(Default, Deserialize, Serialize)]
 pub enum HorizontalPlacement {
     #[default]
     Left,
     Center,
     Right,
+}
+
+impl fmt::Display for HorizontalPlacement {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                Self::Left => "Left",
+                Self::Center => "Center",
+                Self::Right => "Right",
+            }
+        )
+    }
+}
+
+impl FromStr for HorizontalPlacement {
+    type Err = ParsePlacementError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "Left" | "left" => Ok(Self::Left),
+            "Center" | "center" => Ok(Self::Center),
+            "Right" | "right" => Ok(Self::Right),
+            _ => Err(ParsePlacementError),
+        }
+    }
 }
 
 #[derive(Default, Deserialize, Serialize)]

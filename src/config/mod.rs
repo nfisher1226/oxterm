@@ -9,7 +9,13 @@ mod tab_position;
 mod text;
 
 pub use {
-    background::{gradient::Stop, Background, Gradient},
+    background::{
+        gradient::{
+            Direction, HorizontalPlacement, Kind as GradientKind, Placement, Stop,
+            VerticalPlacement,
+        },
+        Background, Gradient,
+    },
     cursor::{Cursor, CursorStyle},
     dynamic_title_style::DynamicTitleStyle,
     font::Font,
