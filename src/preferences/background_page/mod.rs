@@ -1,7 +1,10 @@
 mod imp;
 
 use {
-    crate::{config::{Background, BackgroundColor, Gradient, Image, ImageStyle}, Values},
+    crate::{
+        config::{Background, BackgroundColor, Gradient, Image, ImageStyle},
+        Values,
+    },
     gtk::{
         gio::File,
         glib::{self, GString, Object},
@@ -32,7 +35,13 @@ impl BackgroundPage {
     }
 
     pub fn color(&self) -> BackgroundColor {
-        match self.imp().color_type.active_id().unwrap_or(GString::from("")).as_str() {
+        match self
+            .imp()
+            .color_type
+            .active_id()
+            .unwrap_or(GString::from(""))
+            .as_str()
+        {
             "black" => BackgroundColor::Black,
             "white" => BackgroundColor::White,
             "custom" => BackgroundColor::Custom(self.imp().color_button.rgba().into()),
@@ -46,7 +55,9 @@ impl BackgroundPage {
             BackgroundColor::White => self.imp().color_type.set_active_id(Some("white")),
             BackgroundColor::Custom(color) => {
                 self.imp().color_button.set_rgba(&(*color).into());
-                self.imp().background_type.set_active_id(Some("solid_color"))
+                self.imp()
+                    .background_type
+                    .set_active_id(Some("solid_color"))
             }
         };
     }
@@ -105,7 +116,13 @@ impl BackgroundPage {
 
 impl Values<Background> for BackgroundPage {
     fn values(&self) -> Background {
-        match self.imp().background_type.active_id().unwrap_or(GString::from("")).as_str() {
+        match self
+            .imp()
+            .background_type
+            .active_id()
+            .unwrap_or(GString::from(""))
+            .as_str()
+        {
             "solid_color" => Background::SolidColor(self.color()),
             "image" => {
                 if let Some(image) = self.image() {
@@ -113,7 +130,7 @@ impl Values<Background> for BackgroundPage {
                 } else {
                     Background::default()
                 }
-            },
+            }
             "gradient" => Background::Gradient(self.gradient()),
             _ => Background::default(),
         }
@@ -122,9 +139,11 @@ impl Values<Background> for BackgroundPage {
     fn set_values(&self, background: &Background) {
         match background {
             Background::SolidColor(color) => self.set_color(color),
-            Background::Image(image) => if let Err(e) = self.set_image(image) {
-                eprintln!("{e}");
-            },
+            Background::Image(image) => {
+                if let Err(e) = self.set_image(image) {
+                    eprintln!("{e}");
+                }
+            }
             Background::Gradient(gradient) => self.set_gradient(gradient),
         }
     }

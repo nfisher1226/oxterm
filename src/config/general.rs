@@ -1,6 +1,5 @@
 use {
     super::{DynamicTitleStyle, TabPosition},
-    crate::preferences::GeneralPage,
     serde::{Deserialize, Serialize},
 };
 
@@ -8,8 +7,9 @@ use {
 pub struct General {
     pub initial_title: String,
     pub title_style: DynamicTitleStyle,
-    pub custom_command: Option<String>,
     pub tab_position: TabPosition,
+    pub wide_handles: bool,
+    pub custom_command: Option<String>,
 }
 
 impl Default for General {
@@ -17,19 +17,9 @@ impl Default for General {
         Self {
             initial_title: String::from(env!("CARGO_PKG_NAME")),
             title_style: DynamicTitleStyle::default(),
-            custom_command: None,
             tab_position: TabPosition::default(),
-        }
-    }
-}
-
-impl From<&GeneralPage> for General {
-    fn from(page: &GeneralPage) -> Self {
-        Self {
-            initial_title: page.initial_title(),
-            title_style: page.title_style(),
-            custom_command: page.custom_command(),
-            tab_position: page.tab_position(),
+            wide_handles: false,
+            custom_command: None,
         }
     }
 }

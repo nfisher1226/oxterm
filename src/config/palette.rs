@@ -88,7 +88,7 @@ impl ColorPalette {
     }
 
     pub fn load(name: &str) -> Result<Self, ConfigError> {
-        let mut file = super::get_config_dir();
+        let mut file = super::get_data_dir();
         file.push("palettes");
         file.push(name);
         let contents = fs::read_to_string(file)?;
@@ -97,7 +97,7 @@ impl ColorPalette {
     }
 
     pub fn save(&self) -> Result<(), ConfigError> {
-        let mut file = super::get_config_dir();
+        let mut file = super::get_data_dir();
         file.push("palettes");
         file.push(&self.name);
         let pcfg = PrettyConfig::new().struct_names(true).decimal_floats(true);

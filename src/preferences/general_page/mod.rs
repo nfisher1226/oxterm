@@ -57,6 +57,33 @@ impl GeneralPage {
         }));
     }
 
+    pub fn tab_position(&self) -> TabPosition {
+        self.imp()
+            .tab_position
+            .active_id()
+            .unwrap_or(GString::from(""))
+            .as_str()
+            .parse()
+            .unwrap_or_default()
+    }
+
+    pub fn set_tab_position(&self, pos: &TabPosition) {
+        self.imp().tab_position.set_active_id(Some(match pos {
+            TabPosition::Top => "top",
+            TabPosition::Bottom => "bottom",
+            TabPosition::Left => "left",
+            TabPosition::Right => "right",
+        }));
+    }
+
+    pub fn wide_handles(&self) -> bool {
+        self.imp().wide_handles.is_active()
+    }
+
+    pub fn set_wide_handles(&self, active: bool) {
+        self.imp().wide_handles.set_active(active);
+    }
+
     pub fn custom_command(&self) -> Option<String> {
         let imp = self.imp();
         if imp.custom_command_checkbutton.is_active() {
@@ -81,25 +108,6 @@ impl GeneralPage {
             }
         }
     }
-
-    pub fn tab_position(&self) -> TabPosition {
-        self.imp()
-            .tab_position
-            .active_id()
-            .unwrap_or(GString::from(""))
-            .as_str()
-            .parse()
-            .unwrap_or_default()
-    }
-
-    pub fn set_tab_position(&self, pos: &TabPosition) {
-        self.imp().tab_position.set_active_id(Some(match pos {
-            TabPosition::Top => "top",
-            TabPosition::Bottom => "bottom",
-            TabPosition::Left => "left",
-            TabPosition::Right => "right",
-        }));
-    }
 }
 
 impl Values<General> for GeneralPage {
@@ -107,15 +115,17 @@ impl Values<General> for GeneralPage {
         General {
             initial_title: self.initial_title(),
             title_style: self.title_style(),
-            custom_command: self.custom_command(),
             tab_position: self.tab_position(),
+            wide_handles: self.wide_handles(),
+            custom_command: self.custom_command(),
         }
     }
 
     fn set_values(&self, gen: &General) {
         self.set_initial_title(&gen.initial_title);
         self.set_title_style(&gen.title_style);
-        self.set_custom_command(gen.custom_command.clone());
         self.set_tab_position(&gen.tab_position);
+        self.set_wide_handles(gen.wide_handles);
+        self.set_custom_command(gen.custom_command.clone());
     }
 }

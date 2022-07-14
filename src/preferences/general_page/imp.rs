@@ -13,11 +13,13 @@ pub struct GeneralPage {
     #[template_child]
     pub dynamic_title: TemplateChild<gtk::ComboBoxText>,
     #[template_child]
+    pub tab_position: TemplateChild<gtk::ComboBoxText>,
+    #[template_child]
+    pub wide_handles: TemplateChild<gtk::Switch>,
+    #[template_child]
     pub custom_command_checkbutton: TemplateChild<gtk::CheckButton>,
     #[template_child]
     pub custom_command: TemplateChild<gtk::Entry>,
-    #[template_child]
-    pub tab_position: TemplateChild<gtk::ComboBoxText>,
 }
 
 #[glib::object_subclass]

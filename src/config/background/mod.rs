@@ -1,6 +1,6 @@
 use {
-    serde::{Deserialize, Serialize},
     super::Color,
+    serde::{Deserialize, Serialize},
 };
 
 pub mod gradient;

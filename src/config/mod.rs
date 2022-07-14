@@ -31,7 +31,8 @@ use {
     gtk::glib,
     std::{error::Error, fmt, fs, io, path::PathBuf},
 };
-/// Returns an OS appropriate configuration directory path
+
+/// Returns an OS appropriate configuration directory path (XDG_CONFIG_HOME)
 ///
 /// # Panics
 /// Can panic if the string returned from [`gtk::glib::user_config_dir`] is not valid
@@ -45,6 +46,21 @@ pub fn get_config_dir() -> PathBuf {
         fs::create_dir(&configdir.to_str().unwrap()).unwrap_or_else(|e| eprintln!("{}", e));
     }
     configdir
+}
+
+/// Returns an OS appropriate data directory path (XDG_DATA_HOME)
+///
+/// # Panics
+/// Can panic if the string returned from [`gtk::glib::user_config_dir`] is not valid
+/// unicode (unlikely)
+pub fn get_data_dir() -> PathBuf {
+    let mut datadir = glib::user_data_dir();
+    let progname = env!("CARGO_PKG_NAME");
+    datadir.push(progname);
+    if !datadir.exists() {
+        fs::create_dir_all(&datadir.to_str().unwrap()).unwrap_or_else(|e| eprintln!("{}", e));
+    }
+    datadir
 }
 
 /// Returns the path to config.toml
@@ -94,4 +110,5 @@ impl Error for ConfigError {
 pub struct Config {
     pub general: General,
     pub text: Text,
+    pub background: Background,
 }

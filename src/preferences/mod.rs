@@ -77,6 +77,7 @@ impl Values<Config> for PreferencesDialog {
         Config {
             general: imp.general_page.values(),
             text: imp.text_page.values(),
+            background: imp.background_page.values(),
         }
     }
 
@@ -84,5 +85,6 @@ impl Values<Config> for PreferencesDialog {
         let imp = self.imp();
         imp.general_page.set_values(&cfg.general);
         imp.text_page.set_values(&cfg.text);
+        imp.background_page.set_values(&cfg.background);
     }
 }
