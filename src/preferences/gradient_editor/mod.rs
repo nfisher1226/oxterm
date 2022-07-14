@@ -136,18 +136,21 @@ impl GradientEditor {
     }
 
     pub fn stops(&self) -> Vec<Stop> {
-        let mut stops = self.imp()
+        let mut stops = self
+            .imp()
             .stops
             .borrow()
             .values()
             .map(|x| x.values())
             .collect::<Vec<Stop>>();
-        stops.sort_by(|a,b| a.partial_cmp(b).unwrap());
+        stops.sort_by(|a, b| a.partial_cmp(b).unwrap());
         stops
     }
 
     pub fn set_stops(&self, stops: &[Stop]) {
-        { self.imp().stops.borrow_mut().drain(); }
+        {
+            self.imp().stops.borrow_mut().drain();
+        }
         self.imp().stop_selector.remove_all();
         for s in stops {
             let stop_editor = StopEditor::new_with_stop(&s);
@@ -156,7 +159,6 @@ impl GradientEditor {
             self.imp().stops.borrow_mut().insert(name, stop_editor);
         }
     }
-
 
     pub fn append_stop(&self) -> StopEditor {
         let stop_editor = StopEditor::new();
@@ -203,7 +205,7 @@ impl Values<Gradient> for GradientEditor {
             _ => Gradient {
                 kind: GradientKind::default(),
                 stops: self.stops(),
-            }
+            },
         }
     }
 
@@ -212,15 +214,15 @@ impl Values<Gradient> for GradientEditor {
             GradientKind::Linear(direction) => {
                 self.imp().gradient_kind.set_active_id(Some("linear"));
                 self.set_direction(direction);
-            },
+            }
             GradientKind::Radial(placement) => {
                 self.imp().gradient_kind.set_active_id(Some("radial"));
                 self.set_placement(placement);
-            },
+            }
             GradientKind::Elliptical(placement) => {
                 self.imp().gradient_kind.set_active_id(Some("elliptical"));
                 self.set_placement(placement);
-            },
+            }
         }
         self.set_stops(&gradient.stops);
     }

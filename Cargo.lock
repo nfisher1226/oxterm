@@ -396,6 +396,7 @@ dependencies = [
 [[package]]
 name = "gtk4-file-chooser-button"
 version = "0.1.0"
+source = "git+https://codeberg.org/jeang3nie/gtk4-file-chooser-button#b954cd80519756651e89dfc6978e213270559662"
 dependencies = [
  "gtk4",
 ]

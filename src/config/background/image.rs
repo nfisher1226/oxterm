@@ -12,10 +12,25 @@ pub enum Style {
     Stretched,
 }
 
+impl fmt::Display for Style {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                Self::Tiled => "Tiled",
+                Self::Centered => "Centered",
+                Self::Scaled => "Scaled",
+                Self::Stretched => "Stretched",
+            }
+        )
+    }
+}
+
 #[derive(Deserialize, Serialize)]
 pub struct Image {
-    file: PathBuf,
-    style: Style,
+    pub file: PathBuf,
+    pub style: Style,
 }
 
 #[derive(Debug)]
