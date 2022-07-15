@@ -3,7 +3,7 @@ use {
     serde::{Deserialize, Serialize},
 };
 
-#[derive(Clone, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct General {
     pub initial_title: String,
     pub title_style: DynamicTitleStyle,

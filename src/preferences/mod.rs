@@ -77,6 +77,7 @@ impl Values<Config> for PreferencesDialog {
         Config {
             general: imp.general_page.values(),
             text: imp.text_page.values(),
+            palette: imp.palette_page.values(),
             background: imp.background_page.values(),
         }
     }

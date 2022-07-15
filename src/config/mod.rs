@@ -29,6 +29,7 @@ pub use {
 
 use {
     gtk::glib,
+    serde::{Deserialize, Serialize},
     std::{error::Error, fmt, fs, io, path::PathBuf},
 };
 
@@ -114,8 +115,10 @@ impl Error for ConfigError {
     }
 }
 
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub struct Config {
     pub general: General,
     pub text: Text,
+    pub palette: ColorPalette,
     pub background: Background,
 }

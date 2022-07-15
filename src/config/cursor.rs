@@ -3,13 +3,13 @@ use {
     std::{error::Error, fmt, str::FromStr},
 };
 
-#[derive(Clone, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub struct Cursor {
     pub style: CursorStyle,
     pub blinks: bool,
 }
 
-#[derive(Clone, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub enum CursorStyle {
     #[default]
     Block,

@@ -4,7 +4,7 @@ use {
     std::fmt,
 };
 
-#[derive(Clone, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub enum Font {
     #[default]
     System,

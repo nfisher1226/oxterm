@@ -5,7 +5,7 @@ use {
     std::{cmp::Ordering, error::Error, fmt, str::FromStr},
 };
 
-#[derive(Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub enum VerticalPlacement {
     #[default]
     Top,
@@ -51,7 +51,7 @@ impl FromStr for VerticalPlacement {
     }
 }
 
-#[derive(Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub enum HorizontalPlacement {
     #[default]
     Left,
@@ -86,13 +86,13 @@ impl FromStr for HorizontalPlacement {
     }
 }
 
-#[derive(Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub struct Placement {
     pub vertical: VerticalPlacement,
     pub horizontal: HorizontalPlacement,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub enum Direction {
     Angle(f64),
     Edge(Placement),
@@ -104,7 +104,7 @@ impl Default for Direction {
     }
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub enum Kind {
     Linear(Direction),
     Radial(Placement),
@@ -117,7 +117,7 @@ impl Default for Kind {
     }
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Stop {
     pub color: Color,
     pub position: f64,
@@ -144,7 +144,7 @@ impl PartialEq for Stop {
     }
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Gradient {
     pub kind: Kind,
     pub stops: Vec<Stop>,

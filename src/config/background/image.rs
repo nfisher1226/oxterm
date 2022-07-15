@@ -3,7 +3,7 @@ use {
     std::{error::Error, fmt, path::PathBuf, str::FromStr},
 };
 
-#[derive(Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub enum Style {
     Tiled,
     Centered,
@@ -27,7 +27,7 @@ impl fmt::Display for Style {
     }
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Image {
     pub file: PathBuf,
     pub style: Style,
