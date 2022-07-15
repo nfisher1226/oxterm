@@ -29,6 +29,7 @@ pub use {
 
 use {
     gtk::glib,
+    ron::ser::PrettyConfig,
     serde::{Deserialize, Serialize},
     std::{error::Error, fmt, fs, io, path::PathBuf},
 };
@@ -75,7 +76,7 @@ pub fn get_data_dir() -> PathBuf {
 #[allow(clippy::must_use_candidate)]
 pub fn get_config_file() -> PathBuf {
     let mut file = get_config_dir();
-    file.push("config.toml");
+    file.push("config.ron");
     file
 }
 
@@ -121,4 +122,27 @@ pub struct Config {
     pub text: Text,
     pub palette: ColorPalette,
     pub background: Background,
+}
+
+impl Config {
+    pub fn load() -> Result<Self, ConfigError> {
+        let config_file = get_config_file();
+        let fd = fs::File::open(&config_file)?;
+        let reader = io::BufReader::new(fd);
+        let cfg = ron::de::from_reader(reader)?;
+        Ok(cfg)
+    }
+
+    pub fn save(&self) -> Result<(), ConfigError> {
+        let config_dir = get_config_dir();
+        if !config_dir.exists() {
+            fs::create_dir_all(&config_dir)?;
+        }
+        let config_file = get_config_file();
+        let pcfg = PrettyConfig::new().struct_names(true).decimal_floats(true);
+        let file = fs::File::create(&config_file)?;
+        let buf = io::BufWriter::new(file);
+        ron::ser::to_writer_pretty(buf, self, pcfg)?;
+        Ok(())
+    }
 }

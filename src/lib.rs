@@ -17,10 +17,11 @@ use {
         prelude::*,
     },
     once_cell::sync::Lazy,
-    std::{ffi::CStr, rc::Rc},
+    std::{ffi::CStr, rc::Rc, sync::Mutex},
 };
 
 pub use {
+    config::Config,
     font::{Font, ParseFontError},
     keys::Keys,
     ox_window::OxWindow,
@@ -34,9 +35,12 @@ static SHELL: Lazy<&'static str> = Lazy::new(|| {
     shell.to_str().unwrap_or("/bin/sh")
 });
 
+static CONFIG: Lazy<Mutex<Config>> = Lazy::new(|| {
+    Mutex::new(Config::load().unwrap_or_default())
+});
+
 pub trait Values<V> {
     fn values(&self) -> V;
-
     fn set_values(&self, values: &V);
 }
 
