@@ -1,7 +1,7 @@
 mod imp;
 
 use {
-    crate::{TabLabel, SHELL},
+    crate::{CONFIG, TabLabel, SHELL},
     gtk::{
         gio::Cancellable,
         glib::{self, clone, Object, SpawnFlags},
@@ -127,6 +127,7 @@ impl Tab {
             .hexpand(true)
             .start_child(&old_term)
             .end_child(&new_term)
+            .wide_handle(CONFIG.try_lock().unwrap().general.wide_handles)
             .build();
         self.append(&paned);
         paned.show();
@@ -161,6 +162,7 @@ impl Tab {
                             .hexpand(true)
                             .start_child(&t0)
                             .end_child(&term1)
+                            .wide_handle(CONFIG.try_lock().unwrap().general.wide_handles)
                             .build();
                         paned0.set_start_child(Some(&paned1));
                         paned1.show();
@@ -177,6 +179,7 @@ impl Tab {
                             .hexpand(true)
                             .start_child(&t1)
                             .end_child(&term1)
+                            .wide_handle(CONFIG.try_lock().unwrap().general.wide_handles)
                             .build();
                         paned0.set_end_child(Some(&paned1));
                         paned1.show();

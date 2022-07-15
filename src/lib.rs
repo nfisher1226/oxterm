@@ -46,10 +46,12 @@ pub trait Values<V> {
 
 #[must_use]
 pub fn build_ui(app: &gtk::Application) -> Rc<OxWindow> {
+    let cfg = CONFIG.try_lock().unwrap();
     let window = Rc::new(OxWindow::new(app));
     actions::add(&window, app);
     let _tab = window.new_tab();
     let notebook = window.notebook();
+    notebook.set_tab_pos(cfg.general.tab_position.clone().into());
     notebook.connect_page_removed(clone!(@weak window => move |nb,_page,_| {
         if nb.n_pages() == 0 {
             window.close();

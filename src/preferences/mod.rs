@@ -6,7 +6,7 @@ mod palette_page;
 mod text_page;
 
 use {
-    crate::{config::Config, OxWindow, Values},
+    crate::{CONFIG, config::Config, OxWindow, Values},
     gtk::{
         glib::{self, clone, Object},
         prelude::*,
@@ -35,7 +35,15 @@ pub fn run(window: &OxWindow) {
     let dlg = PreferencesDialog::new();
     dlg.set_transient_for(Some(window));
     dlg.set_modal(true);
+    dlg.set_values(&CONFIG.lock().unwrap());
     dlg.connect_response(clone!(@weak window => move |dlg, res| {
+        if res == gtk::ResponseType::Accept {
+            let cfg = dlg.values();
+            if let Err(e) = cfg.save() {
+                eprintln!("Error saving config: {e}");
+            }
+            *CONFIG.try_lock().unwrap() = cfg;
+        }
         dlg.close();
     }));
     dlg.show();
