@@ -1,3 +1,7 @@
+use std::fmt::format;
+
+use crate::config::DynamicTitleStyle;
+
 mod imp;
 
 use {
@@ -8,6 +12,8 @@ use {
         prelude::*,
         subclass::prelude::*,
     },
+    std::path::PathBuf,
+    vte::TerminalExt,
 };
 
 glib::wrapper! {
@@ -21,7 +27,9 @@ glib::wrapper! {
 impl OxWindow {
     #[must_use]
     pub fn new(app: &gtk::Application) -> Self {
-        Object::new(&[("application", app)]).expect("Cannot create OxtermWindow")
+        let obj: Self = Object::new(&[("application", app)])
+            .expect("Cannot create OxtermWindow");
+        obj
     }
 
     #[must_use]
@@ -99,8 +107,41 @@ impl OxWindow {
     pub fn close_current_tab(&self) {
         self.imp().notebook.remove_page(self.current_page());
     }
+    
+    pub fn set_oxwindow_title(&self) {
+        if let Some(term) = self.current_tab().map(|t| t.current_term()).flatten() {
+            if let Some(path) = term.current_directory_uri().map(|d| PathBuf::from(d.as_str())) {
+                if let Ok(cfg) = CONFIG.try_lock() {
+                    self.set_title(Some(&match cfg.general.title_style {
+                        DynamicTitleStyle::AfterTitle => format!(
+                            "{} - {} ~ {}",
+                            &cfg.general.initial_title,
+                            env!("CARGO_PKG_VERSION"),
+                            path.display(),
+                        ),
+                        DynamicTitleStyle::BeforeTitle => format!(
+                            "{} ~ {} - {}",
+                            path.display(),
+                            &cfg.general.initial_title,
+                            env!("CARGO_PKG_VERSION"),
+                        ),
+                        DynamicTitleStyle::ReplacesTitle => format!(
+                            "{}",
+                            path.display(),
+                        ),
+                        DynamicTitleStyle::NotDisplayed => format!(
+                            "{} - {}",
+                            &cfg.general.initial_title,
+                            env!("CARGO_PKG_VERSION"),
+                        )
+                    }));
+                }
+            }
+        }
+    }
 
     pub fn apply_config(&self) {
+        self.set_oxwindow_title();
         if let Ok(cfg) = CONFIG.try_lock() {
             self.imp()
                 .notebook

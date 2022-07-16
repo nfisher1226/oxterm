@@ -1,3 +1,5 @@
+use crate::OxWindow;
+
 mod imp;
 
 use {
@@ -81,6 +83,13 @@ impl Tab {
         );
         term.connect_has_focus_notify(clone!(@weak self as tab => move |term| {
             *tab.imp().current_term.borrow_mut() = Some(term.widget_name().to_string());
+        }));
+        term.connect_current_directory_uri_changed(clone!(@weak self as tab => move |term| {
+            if let Some(window) = tab.root() {
+                if let Ok(oxwindow) = window.downcast::<OxWindow>() {
+                    oxwindow.set_oxwindow_title();
+                }
+            }
         }));
         term.connect_child_exited(clone!(@weak self as tab => move |term,_| {
             tab.close_term(term);
