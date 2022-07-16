@@ -7,7 +7,7 @@ pub mod gradient;
 pub mod image;
 pub use {gradient::Gradient, image::Image};
 
-#[derive(Clone, Default, Debug, Deserialize, Serialize)]
+#[derive(Clone, Copy, Default, Debug, Deserialize, Serialize)]
 pub enum BackgroundColor {
     #[default]
     Black,

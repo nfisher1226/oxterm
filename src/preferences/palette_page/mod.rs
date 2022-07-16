@@ -1,10 +1,7 @@
 mod imp;
 
 use {
-    crate::{
-        config::{ColorPalette, Palette},
-        Values,
-    },
+    crate::{config::Palette, Values},
     gtk::{
         glib::{self, clone, GString, Object},
         prelude::*,
@@ -81,10 +78,10 @@ impl PalettePage {
     }
 }
 
-impl Values<ColorPalette> for PalettePage {
-    fn values(&self) -> ColorPalette {
+impl Values<Palette> for PalettePage {
+    fn values(&self) -> Palette {
         let imp = self.imp();
-        ColorPalette {
+        Palette {
             name: imp
                 .palette_selector
                 .active_id()
@@ -109,7 +106,7 @@ impl Values<ColorPalette> for PalettePage {
         }
     }
 
-    fn set_values(&self, values: &ColorPalette) {
+    fn set_values(&self, values: &Palette) {
         let imp = self.imp();
         imp.palette_selector
             .set_active_id(Some(&values.name.to_lowercase()));
@@ -130,29 +127,5 @@ impl Values<ColorPalette> for PalettePage {
             .set_rgba(&values.light_magenta.into());
         imp.light_cyan_color.set_rgba(&values.light_cyan.into());
         imp.white_color.set_rgba(&values.white.into());
-    }
-}
-
-impl From<&PalettePage> for Palette {
-    fn from(page: &PalettePage) -> Self {
-        let imp = page.imp();
-        [
-            imp.black_color.rgba().into(),
-            imp.red_color.rgba().into(),
-            imp.green_color.rgba().into(),
-            imp.brown_color.rgba().into(),
-            imp.blue_color.rgba().into(),
-            imp.magenta_color.rgba().into(),
-            imp.cyan_color.rgba().into(),
-            imp.light_grey_color.rgba().into(),
-            imp.dark_grey_color.rgba().into(),
-            imp.light_red_color.rgba().into(),
-            imp.light_green_color.rgba().into(),
-            imp.yellow_color.rgba().into(),
-            imp.light_red_color.rgba().into(),
-            imp.light_blue_color.rgba().into(),
-            imp.light_cyan_color.rgba().into(),
-            imp.white_color.rgba().into(),
-        ]
     }
 }

@@ -21,7 +21,7 @@ pub use {
     dynamic_title_style::DynamicTitleStyle,
     font::Font,
     general::General,
-    palette::{Color, ColorPalette, Palette},
+    palette::{Color, Palette},
     scrollback::Scrollback,
     tab_position::TabPosition,
     text::{Text, TextColor},
@@ -64,7 +64,7 @@ pub fn get_data_dir() -> PathBuf {
         let mut default_palette = datadir.clone();
         default_palette.push("default.ron");
         if !default_palette.exists() {
-            ColorPalette::default()
+            Palette::default()
                 .save()
                 .unwrap_or_else(|e| eprintln!("{}", e));
         }
@@ -120,7 +120,7 @@ impl Error for ConfigError {
 pub struct Config {
     pub general: General,
     pub text: Text,
-    pub palette: ColorPalette,
+    pub palette: Palette,
     pub background: Background,
 }
 

@@ -2,17 +2,15 @@ use std::{fs, io::BufWriter};
 
 use {
     super::ConfigError,
-    gtk::gdk,
     rgba_simple::{PrimaryColor, RGBA},
     ron::ser::PrettyConfig,
     serde::{Deserialize, Serialize},
 };
 
 pub type Color = RGBA<f32>;
-pub type Palette = [gdk::RGBA; 16];
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
-pub struct ColorPalette {
+pub struct Palette {
     pub name: String,
     pub black: Color,
     pub red: Color,
@@ -32,7 +30,7 @@ pub struct ColorPalette {
     pub white: Color,
 }
 
-impl Default for ColorPalette {
+impl Default for Palette {
     fn default() -> Self {
         Self {
             name: String::from("Default"),
@@ -56,30 +54,7 @@ impl Default for ColorPalette {
     }
 }
 
-impl From<&ColorPalette> for Palette {
-    fn from(colors: &ColorPalette) -> Self {
-        [
-            colors.black.into(),
-            colors.red.into(),
-            colors.green.into(),
-            colors.brown.into(),
-            colors.blue.into(),
-            colors.magenta.into(),
-            colors.cyan.into(),
-            colors.light_grey.into(),
-            colors.dark_grey.into(),
-            colors.light_red.into(),
-            colors.light_green.into(),
-            colors.yellow.into(),
-            colors.light_blue.into(),
-            colors.light_magenta.into(),
-            colors.light_cyan.into(),
-            colors.white.into(),
-        ]
-    }
-}
-
-impl ColorPalette {
+impl Palette {
     pub fn new_from(name: &str, palette: Self) -> Self {
         Self {
             name: name.to_string(),
@@ -119,7 +94,7 @@ pub fn get_palette_names() -> Vec<(String, String)> {
             if let Ok(file) = file {
                 if let Some(name) = file.path().file_name() {
                     let name = name.to_string_lossy().to_string();
-                    if let Ok(palette) = ColorPalette::load(&name) {
+                    if let Ok(palette) = Palette::load(&name) {
                         palettes.push((name, palette.name));
                     }
                 }

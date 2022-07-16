@@ -1,7 +1,7 @@
 mod imp;
 
 use {
-    crate::Tab,
+    crate::{Tab, CONFIG},
     gtk::{
         gio,
         glib::{self, clone, Object},
@@ -98,5 +98,20 @@ impl OxWindow {
 
     pub fn close_current_tab(&self) {
         self.imp().notebook.remove_page(self.current_page());
+    }
+
+    pub fn apply_config(&self) {
+        if let Ok(cfg) = CONFIG.try_lock() {
+            self.imp()
+                .notebook
+                .set_tab_pos(cfg.general.tab_position.into());
+        }
+        for obj in self.imp().notebook.pages().into_iter() {
+            if let Ok(page) = obj.downcast::<gtk::NotebookPage>() {
+                if let Ok(tab) = page.child().downcast::<Tab>() {
+                    tab.apply_config();
+                }
+            }
+        }
     }
 }

@@ -1,7 +1,10 @@
 mod imp;
 
 use {
-    crate::{CONFIG, TabLabel, SHELL},
+    crate::{
+        config::{Background, BackgroundColor, Scrollback, TextColor},
+        TabLabel, CONFIG, SHELL,
+    },
     gtk::{
         gio::Cancellable,
         glib::{self, clone, Object, SpawnFlags},
@@ -10,7 +13,7 @@ use {
         traits::WidgetExt,
     },
     std::{cell::RefCell, collections::HashMap, path::Path},
-    vte::{PtyFlags, Terminal, TerminalExt},
+    vte::{PtyFlags, Terminal, TerminalExt, TerminalExtManual},
 };
 
 glib::wrapper! {
@@ -41,6 +44,7 @@ impl Tab {
             .terms
             .borrow_mut()
             .insert(term.widget_name().to_string(), term);
+        tab.apply_config();
         tab
     }
 
@@ -109,6 +113,7 @@ impl Tab {
             1 => self.first_split(orientation),
             _ => self.split_again(orientation),
         }
+        self.apply_config();
     }
 
     fn first_split(&self, orientation: Option<gtk::Orientation>) {
@@ -277,5 +282,69 @@ impl Tab {
             f(&obj);
             None
         })
+    }
+
+    pub fn apply_config(&self) {
+        if let Ok(cfg) = CONFIG.try_lock() {
+            for term in self.imp().terms.borrow().values() {
+                if let Some(parent) = term.parent() {
+                    if let Ok(paned) = parent.downcast::<gtk::Paned>() {
+                        paned.set_wide_handle(cfg.general.wide_handles);
+                    }
+                }
+                term.set_cursor_shape(cfg.text.cursor.style.into());
+                term.set_cursor_blink_mode(if cfg.text.cursor.blinks {
+                    vte::CursorBlinkMode::On
+                } else {
+                    vte::CursorBlinkMode::Off
+                });
+                term.set_scrollback_lines(match cfg.text.scrollback {
+                    Scrollback::Finite(num) => num as i64,
+                    Scrollback::Infinite => -1,
+                });
+                term.set_colors(
+                    Some(&match cfg.text.color {
+                        TextColor::Black => cfg.palette.black.into(),
+                        TextColor::White => cfg.palette.white.into(),
+                        TextColor::Custom(color) => color.into(),
+                    }),
+                    None,
+                    &[
+                        &cfg.palette.black.into(),
+                        &cfg.palette.red.into(),
+                        &cfg.palette.green.into(),
+                        &cfg.palette.yellow.into(),
+                        &cfg.palette.blue.into(),
+                        &cfg.palette.magenta.into(),
+                        &cfg.palette.cyan.into(),
+                        &cfg.palette.light_grey.into(),
+                        &cfg.palette.dark_grey.into(),
+                        &cfg.palette.brown.into(),
+                        &cfg.palette.light_red.into(),
+                        &cfg.palette.light_green.into(),
+                        &cfg.palette.light_blue.into(),
+                        &cfg.palette.light_magenta.into(),
+                        &cfg.palette.light_cyan.into(),
+                        &cfg.palette.white.into(),
+                    ],
+                );
+                match cfg.background {
+                    Background::SolidColor(color) => {
+                        term.set_color_background(&match color {
+                            BackgroundColor::Black => cfg.palette.black.into(),
+                            BackgroundColor::White => cfg.palette.white.into(),
+                            BackgroundColor::Custom(color) => color.into(),
+                        });
+                    }
+                    _ => {}
+                };
+                match &cfg.text.font {
+                    crate::config::Font::System => term.set_font(None),
+                    crate::config::Font::Custom(font) => {
+                        term.set_font(Some(&(font.into())));
+                    }
+                }
+            }
+        }
     }
 }

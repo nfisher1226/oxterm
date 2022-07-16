@@ -35,9 +35,7 @@ static SHELL: Lazy<&'static str> = Lazy::new(|| {
     shell.to_str().unwrap_or("/bin/sh")
 });
 
-static CONFIG: Lazy<Mutex<Config>> = Lazy::new(|| {
-    Mutex::new(Config::load().unwrap_or_default())
-});
+static CONFIG: Lazy<Mutex<Config>> = Lazy::new(|| Mutex::new(Config::load().unwrap_or_default()));
 
 pub trait Values<V> {
     fn values(&self) -> V;
@@ -46,12 +44,11 @@ pub trait Values<V> {
 
 #[must_use]
 pub fn build_ui(app: &gtk::Application) -> Rc<OxWindow> {
-    let cfg = CONFIG.try_lock().unwrap();
     let window = Rc::new(OxWindow::new(app));
     actions::add(&window, app);
     let _tab = window.new_tab();
     let notebook = window.notebook();
-    notebook.set_tab_pos(cfg.general.tab_position.clone().into());
+    window.apply_config();
     notebook.connect_page_removed(clone!(@weak window => move |nb,_page,_| {
         if nb.n_pages() == 0 {
             window.close();

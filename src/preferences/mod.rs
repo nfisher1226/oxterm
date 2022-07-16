@@ -6,7 +6,7 @@ mod palette_page;
 mod text_page;
 
 use {
-    crate::{CONFIG, config::Config, OxWindow, Values},
+    crate::{config::Config, OxWindow, Values, CONFIG},
     gtk::{
         glib::{self, clone, Object},
         prelude::*,

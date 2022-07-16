@@ -9,7 +9,7 @@ pub struct Cursor {
     pub blinks: bool,
 }
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Copy, Debug, Default, Deserialize, Serialize)]
 pub enum CursorStyle {
     #[default]
     Block,
@@ -51,6 +51,16 @@ impl FromStr for CursorStyle {
             "ibeam" | "Ibeam" => Ok(Self::Ibeam),
             "underline" | "Underline" => Ok(Self::Underline),
             _ => Err(ParseCursorError),
+        }
+    }
+}
+
+impl From<CursorStyle> for vte::CursorShape {
+    fn from(style: CursorStyle) -> Self {
+        match style {
+            CursorStyle::Block => Self::Block,
+            CursorStyle::Ibeam => Self::Ibeam,
+            CursorStyle::Underline => Self::Underline,
         }
     }
 }
