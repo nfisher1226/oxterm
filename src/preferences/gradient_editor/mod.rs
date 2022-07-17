@@ -30,6 +30,7 @@ impl Default for GradientEditor {
     }
 }
 
+#[allow(clippy::cast_precision_loss)]
 impl GradientEditor {
     #[must_use]
     pub fn new() -> Self {
@@ -111,7 +112,7 @@ impl GradientEditor {
             .imp()
             .direction_type
             .active_id()
-            .unwrap_or(GString::from(""))
+            .unwrap_or_else(|| GString::from(""))
             .as_str()
         {
             "angle" => Direction::Angle(self.degrees()),
@@ -141,7 +142,7 @@ impl GradientEditor {
             .stops
             .borrow()
             .values()
-            .map(|x| x.values())
+            .map(Values::values)
             .collect::<Vec<Stop>>();
         stops.sort_by(|a, b| a.partial_cmp(b).unwrap());
         stops
@@ -153,7 +154,7 @@ impl GradientEditor {
         }
         self.imp().stop_selector.remove_all();
         for s in stops {
-            let stop_editor = StopEditor::new_with_stop(&s);
+            let stop_editor = StopEditor::new_with_stop(s);
             let name = stop_editor.widget_name().to_string();
             self.imp().stop_selector.append(Some(&name), &name);
             self.imp().stops.borrow_mut().insert(name, stop_editor);
@@ -179,7 +180,7 @@ impl GradientEditor {
             imp.stops_stack.remove(&stop);
             imp.stop_selector.remove_all();
             for name in imp.stops.borrow().keys() {
-                let _stop = imp.stop_selector.append(Some(name), name);
+                imp.stop_selector.append(Some(name), name);
             }
         }
     }
@@ -191,7 +192,7 @@ impl Values<Gradient> for GradientEditor {
             .imp()
             .gradient_kind
             .active_id()
-            .unwrap_or(GString::from(""))
+            .unwrap_or_else(|| GString::from(""))
             .as_str()
         {
             "linear" => Gradient {

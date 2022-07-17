@@ -50,8 +50,8 @@ impl From<pango::Style> for Style {
     }
 }
 
-impl From<&Style> for pango::Style {
-    fn from(style: &Style) -> Self {
+impl From<Style> for pango::Style {
+    fn from(style: Style) -> Self {
         match style {
             Style::Normal => pango::Style::Normal,
             Style::Oblique => pango::Style::Oblique,
@@ -133,8 +133,8 @@ impl From<pango::Weight> for Weight {
     }
 }
 
-impl From<&Weight> for pango::Weight {
-    fn from(weight: &Weight) -> Self {
+impl From<Weight> for pango::Weight {
+    fn from(weight: Weight) -> Self {
         match weight {
             Weight::Thin => Self::Thin,
             Weight::Ultralight => Self::Ultralight,
@@ -214,8 +214,8 @@ impl From<pango::Stretch> for Stretch {
     }
 }
 
-impl From<&Stretch> for pango::Stretch {
-    fn from(stretch: &Stretch) -> Self {
+impl From<Stretch> for pango::Stretch {
+    fn from(stretch: Stretch) -> Self {
         match stretch {
             Stretch::UltraCondensed => Self::UltraCondensed,
             Stretch::ExtraCondensed => Self::ExtraCondensed,
@@ -329,9 +329,9 @@ impl From<&Font> for pango::FontDescription {
     fn from(input: &Font) -> Self {
         let mut font = pango::FontDescription::new();
         font.set_family(&input.family);
-        font.set_style((&input.style).into());
-        font.set_weight((&input.weight).into());
-        font.set_stretch((&input.stretch).into());
+        font.set_style(input.style.into());
+        font.set_weight(input.weight.into());
+        font.set_stretch(input.stretch.into());
         font.set_size(input.size);
         font
     }

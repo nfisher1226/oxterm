@@ -74,6 +74,7 @@ impl PreferencesDialog {
         obj
     }
 
+    #[must_use]
     pub fn background_page(&self) -> BackgroundPage {
         self.imp().background_page.clone()
     }

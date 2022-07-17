@@ -33,12 +33,11 @@ impl StopEditor {
                 .take(8)
                 .collect::<String>()
         );
-        let obj = Object::new(&[
+        Object::new(&[
             ("orientation", &gtk::Orientation::Horizontal),
             ("name", &name),
         ])
-        .expect("Cannot create tab label");
-        obj
+        .expect("Cannot create tab label")
     }
 
     pub fn new_with_stop(stop: &Stop) -> Self {

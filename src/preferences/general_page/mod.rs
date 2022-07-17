@@ -42,7 +42,7 @@ impl GeneralPage {
         self.imp()
             .dynamic_title
             .active_id()
-            .unwrap_or(GString::from(""))
+            .unwrap_or_else(|| GString::from(""))
             .as_str()
             .parse()
             .unwrap_or_default()
@@ -61,13 +61,13 @@ impl GeneralPage {
         self.imp()
             .tab_position
             .active_id()
-            .unwrap_or(GString::from(""))
+            .unwrap_or_else(|| GString::from(""))
             .as_str()
             .parse()
             .unwrap_or_default()
     }
 
-    pub fn set_tab_position(&self, pos: &TabPosition) {
+    pub fn set_tab_position(&self, pos: TabPosition) {
         self.imp().tab_position.set_active_id(Some(match pos {
             TabPosition::Top => "top",
             TabPosition::Bottom => "bottom",
@@ -95,17 +95,14 @@ impl GeneralPage {
 
     pub fn set_custom_command(&self, cmd: Option<String>) {
         let imp = self.imp();
-        match cmd {
-            Some(c) => {
-                imp.custom_command_checkbutton.set_active(true);
-                imp.custom_command.set_text(&c);
-                imp.custom_command.set_sensitive(true);
-            }
-            None => {
-                imp.custom_command_checkbutton.set_active(false);
-                imp.custom_command.set_text("");
-                imp.custom_command.set_sensitive(false);
-            }
+        if let Some(c) = cmd {
+            imp.custom_command_checkbutton.set_active(true);
+            imp.custom_command.set_text(&c);
+            imp.custom_command.set_sensitive(true);
+        } else {
+            imp.custom_command_checkbutton.set_active(false);
+            imp.custom_command.set_text("");
+            imp.custom_command.set_sensitive(false);
         }
     }
 }
@@ -124,7 +121,7 @@ impl Values<General> for GeneralPage {
     fn set_values(&self, gen: &General) {
         self.set_initial_title(&gen.initial_title);
         self.set_title_style(&gen.title_style);
-        self.set_tab_position(&gen.tab_position);
+        self.set_tab_position(gen.tab_position);
         self.set_wide_handles(gen.wide_handles);
         self.set_custom_command(gen.custom_command.clone());
     }

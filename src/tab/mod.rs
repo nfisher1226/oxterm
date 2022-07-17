@@ -14,7 +14,11 @@ use {
         subclass::prelude::*,
         traits::WidgetExt,
     },
-    std::{cell::RefCell, collections::HashMap, path::{Path, PathBuf}},
+    std::{
+        cell::RefCell,
+        collections::HashMap,
+        path::{Path, PathBuf},
+    },
     vte::{PtyFlags, Terminal, TerminalExt, TerminalExtManual},
 };
 
@@ -61,7 +65,9 @@ impl Tab {
                 if let Some(dir) = path.file_name() {
                     let dir = dir.to_string_lossy();
                     let hostname = gethostname::gethostname();
-                    self.imp().label.set_label(&format!("{}:{dir}", hostname.to_string_lossy()));
+                    self.imp()
+                        .label
+                        .set_label(&format!("{}:{dir}", hostname.to_string_lossy()));
                 }
             }
         }
@@ -312,8 +318,10 @@ impl Tab {
         })
     }
 
+    #[allow(clippy::cast_possible_truncation)]
     pub fn apply_config(&self) {
         if let Ok(cfg) = CONFIG.try_lock() {
+            let cfg = cfg.clone();
             for term in self.imp().terms.borrow().values() {
                 if let Some(parent) = term.parent() {
                     if let Ok(paned) = parent.downcast::<gtk::Paned>() {
@@ -356,16 +364,13 @@ impl Tab {
                         &cfg.palette.white.into(),
                     ],
                 );
-                match cfg.background {
-                    Background::SolidColor(color) => {
-                        term.set_color_background(&match color {
-                            BackgroundColor::Black => cfg.palette.black.into(),
-                            BackgroundColor::White => cfg.palette.white.into(),
-                            BackgroundColor::Custom(color) => color.into(),
-                        });
-                    }
-                    _ => {}
-                };
+                if let Background::SolidColor(color) = cfg.background {
+                    term.set_color_background(&match color {
+                        BackgroundColor::Black => cfg.palette.black.into(),
+                        BackgroundColor::White => cfg.palette.white.into(),
+                        BackgroundColor::Custom(color) => color.into(),
+                    });
+                }
                 match &cfg.text.font {
                     crate::config::Font::System => term.set_font(None),
                     crate::config::Font::Custom(font) => {

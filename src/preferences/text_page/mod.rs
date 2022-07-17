@@ -37,7 +37,7 @@ impl TextPage {
             style: imp
                 .cursor_style
                 .active_id()
-                .unwrap_or(GString::from(""))
+                .unwrap_or_else(|| GString::from(""))
                 .as_str()
                 .parse()
                 .unwrap_or_default(),
@@ -105,10 +105,9 @@ impl TextPage {
         match imp
             .color_type
             .active_id()
-            .unwrap_or(GString::from("white"))
+            .unwrap_or_else(|| GString::from("white"))
             .as_str()
         {
-            "white" => TextColor::White,
             "black" => TextColor::Black,
             "custom" => TextColor::Custom(imp.text_color.rgba().into()),
             _ => TextColor::White,
@@ -129,7 +128,7 @@ impl TextPage {
             TextColor::Custom(c) => {
                 imp.text_color.set_sensitive(true);
                 imp.color_type.set_active_id(Some("custom"));
-                imp.text_color.set_rgba(&c.clone().into());
+                imp.text_color.set_rgba(&(*c).into());
             }
         }
     }

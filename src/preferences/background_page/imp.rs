@@ -51,7 +51,7 @@ impl ObjectImpl for BackgroundPage {
         self.color_type.set_active_id(Some("black"));
         self.color_type
             .connect_changed(clone!(@strong self.color_button as but => move |ct| {
-                match ct.active_id().unwrap_or(GString::from("")).as_str() {
+                match ct.active_id().unwrap_or_else(|| GString::from("")).as_str() {
                     "custom" => but.set_sensitive(true),
                     _ => but.set_sensitive(false),
                 }

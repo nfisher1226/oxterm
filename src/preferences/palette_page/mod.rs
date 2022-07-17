@@ -85,7 +85,7 @@ impl Values<Palette> for PalettePage {
             name: imp
                 .palette_selector
                 .active_id()
-                .unwrap_or(GString::from("Default"))
+                .unwrap_or_else(|| GString::from("Default"))
                 .to_string(),
             black: imp.black_color.rgba().into(),
             red: imp.red_color.rgba().into(),

@@ -25,8 +25,7 @@ glib::wrapper! {
 impl OxWindow {
     #[must_use]
     pub fn new(app: &gtk::Application) -> Self {
-        let obj: Self = Object::new(&[("application", app)])
-            .expect("Cannot create OxtermWindow");
+        let obj: Self = Object::new(&[("application", app)]).expect("Cannot create OxtermWindow");
         obj
     }
 
@@ -62,6 +61,10 @@ impl OxWindow {
         self.imp().notebook.current_page()
     }
 
+    /// Gets the current `Tab` widget
+    /// # Panics
+    /// Because we will never have a notebook page which is not a `Tab`, it is
+    /// safe to call unwrap here and it will never panic
     #[must_use]
     pub fn current_tab(&self) -> Option<Tab> {
         self.imp()
@@ -70,6 +73,10 @@ impl OxWindow {
             .map(|x| x.downcast::<Tab>().unwrap())
     }
 
+    /// Gets the tab at index `num`
+    /// # Panics
+    /// Because we will never have a notebook page which is not a `Tab`, it is
+    /// safe to call unwrap here and it will never panic
     #[must_use]
     pub fn nth_tab(&self, num: u32) -> Option<Tab> {
         self.imp()
@@ -105,35 +112,36 @@ impl OxWindow {
     pub fn close_current_tab(&self) {
         self.imp().notebook.remove_page(self.current_page());
     }
-    
+
     pub fn set_oxwindow_title(&self) {
-        if let Some(term) = self.current_tab().map(|t| t.current_term()).flatten() {
-            if let Some(path) = term.current_directory_uri().map(|d| PathBuf::from(d.as_str())) {
+        if let Some(term) = self.current_tab().and_then(|t| t.current_term()) {
+            if let Some(path) = term
+                .current_directory_uri()
+                .map(|d| PathBuf::from(d.as_str()))
+            {
                 let path = path.to_string_lossy();
                 let path = path.strip_prefix("file://").unwrap_or(&path);
                 if let Ok(cfg) = CONFIG.try_lock() {
-                    self.set_title(Some(&match cfg.general.title_style {
+                    let gen = cfg.general.clone();
+                    self.set_title(Some(&match gen.title_style {
                         DynamicTitleStyle::AfterTitle => format!(
                             "{}-{} ~ {}",
-                            &cfg.general.initial_title,
+                            &gen.initial_title,
                             env!("CARGO_PKG_VERSION"),
                             path,
                         ),
                         DynamicTitleStyle::BeforeTitle => format!(
                             "{} ~ {}-{}",
                             path,
-                            &cfg.general.initial_title,
+                            &gen.initial_title,
                             env!("CARGO_PKG_VERSION"),
                         ),
-                        DynamicTitleStyle::ReplacesTitle => format!(
-                            "{}",
-                            path,
-                        ),
+                        DynamicTitleStyle::ReplacesTitle => path.to_string(),
                         DynamicTitleStyle::NotDisplayed => format!(
                             "{}-{}",
-                            &cfg.general.initial_title,
+                            &gen.initial_title,
                             env!("CARGO_PKG_VERSION"),
-                        )
+                        ),
                     }));
                 }
             }
@@ -147,7 +155,7 @@ impl OxWindow {
                 .notebook
                 .set_tab_pos(cfg.general.tab_position.into());
         }
-        for obj in self.imp().notebook.pages().into_iter() {
+        for obj in self.imp().notebook.pages() {
             if let Ok(page) = obj.downcast::<gtk::NotebookPage>() {
                 if let Ok(tab) = page.child().downcast::<Tab>() {
                     tab.apply_config();

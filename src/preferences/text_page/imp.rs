@@ -59,7 +59,7 @@ impl ObjectImpl for TextPage {
         self.color_type.set_active_id(Some("white"));
         self.color_type
             .connect_changed(clone!(@strong self.text_color as tc => move |bx| {
-                match bx.active_id().unwrap_or(GString::from("white")).as_str() {
+                match bx.active_id().unwrap_or_else(|| GString::from("white")).as_str() {
                     "custom" => tc.set_sensitive(true),
                     _ => tc.set_sensitive(false),
                 }

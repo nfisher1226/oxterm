@@ -39,7 +39,7 @@ impl BackgroundPage {
             .imp()
             .color_type
             .active_id()
-            .unwrap_or(GString::from(""))
+            .unwrap_or_else(|| GString::from(""))
             .as_str()
         {
             "black" => BackgroundColor::Black,
@@ -86,13 +86,7 @@ impl BackgroundPage {
 
     pub fn image(&self) -> Option<Image> {
         Some(Image {
-            file: {
-                if let Some(i) = self.image_file().map(|x| x.path()).flatten() {
-                    i
-                } else {
-                    return None;
-                }
-            },
+            file: self.image_file().and_then(|x| x.path())?,
             style: self.image_style(),
         })
     }
@@ -109,7 +103,7 @@ impl BackgroundPage {
     }
 
     pub fn set_gradient(&self, gradient: &Gradient) {
-        self.imp().gradient_editor.set_values(&gradient);
+        self.imp().gradient_editor.set_values(gradient);
         self.imp().background_type.set_active_id(Some("gradient"));
     }
 }
@@ -120,7 +114,7 @@ impl Values<Background> for BackgroundPage {
             .imp()
             .background_type
             .active_id()
-            .unwrap_or(GString::from(""))
+            .unwrap_or_else(|| GString::from(""))
             .as_str()
         {
             "solid_color" => Background::SolidColor(self.color()),
