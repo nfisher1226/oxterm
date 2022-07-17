@@ -14,7 +14,7 @@ use {
         subclass::prelude::*,
         traits::WidgetExt,
     },
-    std::{cell::RefCell, collections::HashMap, path::Path},
+    std::{cell::RefCell, collections::HashMap, path::{Path, PathBuf}},
     vte::{PtyFlags, Terminal, TerminalExt, TerminalExtManual},
 };
 
@@ -55,6 +55,19 @@ impl Tab {
         self.imp().label.clone()
     }
 
+    pub fn set_label(&self) {
+        if let Some(t) = self.current_term() {
+            if let Some(path) = t.current_directory_uri().map(|d| PathBuf::from(d.as_str())) {
+                if let Some(dir) = path.file_name() {
+                    let dir = dir.to_string_lossy();
+                    if let Ok(hostname) = crate::gethostname() {
+                        self.imp().label.set_label(&format!("{hostname}:{dir}"));
+                    }
+                }
+            }
+        }
+    }
+
     #[must_use]
     pub fn terms(&self) -> RefCell<HashMap<String, Terminal>> {
         self.imp().terms.clone()
@@ -83,13 +96,20 @@ impl Tab {
         );
         term.connect_has_focus_notify(clone!(@weak self as tab => move |term| {
             *tab.imp().current_term.borrow_mut() = Some(term.widget_name().to_string());
-        }));
-        term.connect_current_directory_uri_changed(clone!(@weak self as tab => move |term| {
             if let Some(window) = tab.root() {
                 if let Ok(oxwindow) = window.downcast::<OxWindow>() {
                     oxwindow.set_oxwindow_title();
                 }
             }
+            tab.set_label();
+        }));
+        term.connect_current_directory_uri_changed(clone!(@weak self as tab => move |_term| {
+            if let Some(window) = tab.root() {
+                if let Ok(oxwindow) = window.downcast::<OxWindow>() {
+                    oxwindow.set_oxwindow_title();
+                }
+            }
+            tab.set_label();
         }));
         term.connect_child_exited(clone!(@weak self as tab => move |term,_| {
             tab.close_term(term);

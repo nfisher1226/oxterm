@@ -1,5 +1,3 @@
-use std::fmt::format;
-
 use crate::config::DynamicTitleStyle;
 
 mod imp;
@@ -114,13 +112,13 @@ impl OxWindow {
                 if let Ok(cfg) = CONFIG.try_lock() {
                     self.set_title(Some(&match cfg.general.title_style {
                         DynamicTitleStyle::AfterTitle => format!(
-                            "{} - {} ~ {}",
+                            "{}-{} ~ {}",
                             &cfg.general.initial_title,
                             env!("CARGO_PKG_VERSION"),
                             path.display(),
                         ),
                         DynamicTitleStyle::BeforeTitle => format!(
-                            "{} ~ {} - {}",
+                            "{} ~ {}-{}",
                             path.display(),
                             &cfg.general.initial_title,
                             env!("CARGO_PKG_VERSION"),
@@ -130,7 +128,7 @@ impl OxWindow {
                             path.display(),
                         ),
                         DynamicTitleStyle::NotDisplayed => format!(
-                            "{} - {}",
+                            "{}-{}",
                             &cfg.general.initial_title,
                             env!("CARGO_PKG_VERSION"),
                         )

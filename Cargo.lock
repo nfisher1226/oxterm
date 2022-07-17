@@ -516,6 +516,7 @@ dependencies = [
  "fastrand",
  "gtk4",
  "gtk4-file-chooser-button",
+ "libc",
  "once_cell",
  "rgba_simple",
  "ron",
