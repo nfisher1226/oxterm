@@ -109,23 +109,25 @@ impl OxWindow {
     pub fn set_oxwindow_title(&self) {
         if let Some(term) = self.current_tab().map(|t| t.current_term()).flatten() {
             if let Some(path) = term.current_directory_uri().map(|d| PathBuf::from(d.as_str())) {
+                let path = path.to_string_lossy();
+                let path = path.strip_prefix("file://").unwrap_or(&path);
                 if let Ok(cfg) = CONFIG.try_lock() {
                     self.set_title(Some(&match cfg.general.title_style {
                         DynamicTitleStyle::AfterTitle => format!(
                             "{}-{} ~ {}",
                             &cfg.general.initial_title,
                             env!("CARGO_PKG_VERSION"),
-                            path.display(),
+                            path,
                         ),
                         DynamicTitleStyle::BeforeTitle => format!(
                             "{} ~ {}-{}",
-                            path.display(),
+                            path,
                             &cfg.general.initial_title,
                             env!("CARGO_PKG_VERSION"),
                         ),
                         DynamicTitleStyle::ReplacesTitle => format!(
                             "{}",
-                            path.display(),
+                            path,
                         ),
                         DynamicTitleStyle::NotDisplayed => format!(
                             "{}-{}",

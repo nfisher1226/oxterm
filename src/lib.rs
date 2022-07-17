@@ -1,7 +1,6 @@
 #![warn(clippy::all, clippy::pedantic)]
 #![doc = include_str!("../README.md")]
 
-use std::{io, ffi::OsString, os::unix::prelude::OsStringExt};
 mod about;
 pub mod actions;
 pub mod cli;
@@ -42,24 +41,6 @@ static CONFIG: Lazy<Mutex<Config>> = Lazy::new(|| Mutex::new(Config::load().unwr
 pub trait Values<V> {
     fn values(&self) -> V;
     fn set_values(&self, values: &V);
-}
-
-pub fn gethostname() -> io::Result<String> {
-    let size =
-        unsafe { libc::sysconf(libc::_SC_HOST_NAME_MAX) as libc::size_t };
-    let mut buffer = vec![0u8; size];
-    let result = unsafe {
-        libc::gethostname(buffer.as_mut_ptr() as *mut libc::c_char, size)
-    };
-    if result != 0 {
-        return Err(io::Error::last_os_error());
-    }
-    let end = buffer
-        .iter()
-        .position(|&byte| byte == 0x00)
-        .unwrap_or_else(|| buffer.len());
-    buffer.resize(end, 0x00);
-    Ok(OsString::from_vec(buffer).to_string_lossy().to_string())
 }
 
 #[must_use]

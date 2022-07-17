@@ -60,9 +60,8 @@ impl Tab {
             if let Some(path) = t.current_directory_uri().map(|d| PathBuf::from(d.as_str())) {
                 if let Some(dir) = path.file_name() {
                     let dir = dir.to_string_lossy();
-                    if let Ok(hostname) = crate::gethostname() {
-                        self.imp().label.set_label(&format!("{hostname}:{dir}"));
-                    }
+                    let hostname = gethostname::gethostname();
+                    self.imp().label.set_label(&format!("{}:{dir}", hostname.to_string_lossy()));
                 }
             }
         }
