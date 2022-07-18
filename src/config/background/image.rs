@@ -1,4 +1,5 @@
 use {
+    super::AsCss,
     serde::{Deserialize, Serialize},
     std::{error::Error, fmt, path::PathBuf, str::FromStr},
 };
@@ -24,6 +25,24 @@ impl fmt::Display for Style {
                 Self::Stretched => "Stretched",
             }
         )
+    }
+}
+
+impl AsCss<&'static str> for Style {
+    fn as_css(&self) -> &'static str {
+        match self {
+            Self::Tiled => "    background-repeat: repeat;\n",
+            Self::Centered => {
+                "    background-position: center;\n    \
+                background-repeat: no-repeat;\n"
+            }
+            Self::Scaled => {
+                "    background-size: contain;\n    \
+                background-repeat: no-repeat;\n    \
+                background-position: center;\n"
+            }
+            Self::Stretched => "    background-size: 100% 100%;\n",
+        }
     }
 }
 
@@ -55,5 +74,16 @@ impl FromStr for Style {
             "stretched" | "Stretched" => Ok(Self::Stretched),
             _ => Err(ParseImageStyleError),
         }
+    }
+}
+
+impl AsCss<std::string::String> for Image {
+    fn as_css(&self) -> std::string::String {
+        format!(
+            ".workview stack {{\n    \
+            background-image: url(\"{}\");\n{}",
+            self.file.display(),
+            self.style.as_css(),
+        )
     }
 }

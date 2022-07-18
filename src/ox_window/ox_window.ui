@@ -57,6 +57,7 @@
             <property name="enable-popup">1</property>
             <property name="scrollable">1</property>
             <property name="show-tabs">1</property>
+	    <property name="css-classes">workview</property>
             <child type="action-end">
               <object class="GtkBox">
                 <property name="orientation">horizontal</property>

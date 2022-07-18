@@ -2,10 +2,11 @@ use {
     crate::config::Color,
     rgba_simple::{PrimaryColor, RGBA},
     serde::{Deserialize, Serialize},
-    std::{cmp::Ordering, error::Error, fmt, str::FromStr},
+    std::{cmp::Ordering, error::Error, fmt::{self, Write}, str::FromStr},
+    super::AsCss,
 };
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, PartialEq, Serialize)]
 pub enum VerticalPlacement {
     #[default]
     Top,
@@ -51,7 +52,7 @@ impl FromStr for VerticalPlacement {
     }
 }
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, PartialEq, Serialize)]
 pub enum HorizontalPlacement {
     #[default]
     Left,
@@ -92,6 +93,28 @@ pub struct Placement {
     pub horizontal: HorizontalPlacement,
 }
 
+impl AsCss<&'static str> for Placement {
+    fn as_css(&self) -> &'static str {
+        match self.vertical {
+            VerticalPlacement::Top => match self.horizontal {
+                HorizontalPlacement::Left => "top left",
+                HorizontalPlacement::Center => "top",
+                HorizontalPlacement::Right => "top right",
+            },
+            VerticalPlacement::Center => match self.horizontal {
+                HorizontalPlacement::Left => "left",
+                HorizontalPlacement::Center => "center",
+                HorizontalPlacement::Right => "right",
+            },
+            VerticalPlacement::Bottom => match self.horizontal {
+                HorizontalPlacement::Left => "bottom left",
+                HorizontalPlacement::Center => "bottom",
+                HorizontalPlacement::Right => "bottom right",
+            },
+        }
+    }
+}
+
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub enum Direction {
     Angle(f64),
@@ -123,6 +146,12 @@ pub struct Stop {
     pub position: f64,
 }
 
+impl fmt::Display for Stop {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{} {}%", self.color, self.position.round())
+    }
+}
+
 impl Stop {
     pub const MIN_POSITION: f64 = 0.0;
     pub const MAX_POSITION: f64 = 100.0;
@@ -148,6 +177,76 @@ impl PartialEq for Stop {
 pub struct Gradient {
     pub kind: Kind,
     pub stops: Vec<Stop>,
+}
+
+impl AsCss<std::string::String> for Vec<Stop> {
+    fn as_css(&self) -> std::string::String {
+        let mut stops = String::new();
+        for stop in self {
+            let _result = write!(stops, ", {stop}");
+        }
+        stops
+    }
+}
+
+impl AsCss<std::string::String> for Gradient {
+    fn as_css(&self) -> std::string::String {
+        let mut css = String::from(".workview stack {{\n    background-image: ");
+        let bsize = "    background-size: 100% 100%;";
+        match &self.kind {
+            Kind::Linear(direction) => {
+                match direction {
+                    Direction::Angle(angle) => {
+                        let _result = write!(
+                            css,
+                            "linear-gradient({}deg{});\n{}\n}}",
+                            angle.round(),
+                            self.stops.as_css(),
+                            bsize,
+                        );
+                    },
+                    Direction::Edge(position) => {
+                        if position.horizontal == HorizontalPlacement::Center &&
+                            position.vertical == VerticalPlacement::Center {
+                            let _result = write!(
+                                css,
+                                "linear-gradient(to bottom right{});\n{}\n}}",
+                                self.stops.as_css(),
+                                bsize,
+                            );
+                        } else {
+                            let _result = write!(
+                                css,
+                                "linear-gradient(to {}{});\n{}\n}}",
+                                position.as_css(),
+                                self.stops.as_css(),
+                                bsize,
+                            );
+                        }
+                    },
+                }
+            },
+            Kind::Radial(position) => {
+                let _result = write!(
+                    css,
+                    "radial-gradient(circle at {}{});\n{}\n}}",
+                    position.as_css(),
+                    self.stops.as_css(),
+                    bsize,
+                );
+            },
+            Kind::Elliptical(position) => {
+                let _result = write!(
+                    css,
+                    "radial-gradient(ellipse at {}{});\n{}\n}}",
+                    position.as_css(),
+                    self.stops.as_css(),
+                    bsize,
+                );
+            },
+        }
+        css
+    }
 }
 
 impl Default for Gradient {

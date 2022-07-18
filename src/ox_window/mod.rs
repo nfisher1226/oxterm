@@ -137,11 +137,9 @@ impl OxWindow {
                             env!("CARGO_PKG_VERSION"),
                         ),
                         DynamicTitleStyle::ReplacesTitle => path.to_string(),
-                        DynamicTitleStyle::NotDisplayed => format!(
-                            "{}-{}",
-                            &gen.initial_title,
-                            env!("CARGO_PKG_VERSION"),
-                        ),
+                        DynamicTitleStyle::NotDisplayed => {
+                            format!("{}-{}", &gen.initial_title, env!("CARGO_PKG_VERSION"),)
+                        }
                     }));
                 }
             }
