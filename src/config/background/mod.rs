@@ -66,15 +66,6 @@ impl AsCss<std::string::String> for Background {
     }
 }
 
-impl AsCss<std::string::String> for Color {
-    fn as_css(&self) -> std::string::String {
-        format!(
-            ".workview stack {{\n    {}\n    background-size: 100% 100%;\n}}",
-            self,
-        )
-    }
-}
-
 impl fmt::Display for BackgroundColor {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", Color::from(*self))

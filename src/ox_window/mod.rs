@@ -1,13 +1,16 @@
-use crate::config::DynamicTitleStyle;
+use crate::config::Background;
 
 mod imp;
 
 use {
-    crate::{Tab, CONFIG},
+    crate::{config::{AsCss, DynamicTitleStyle}, Tab, CONFIG},
     gtk::{
+        CssProvider,
+        gdk::Display,
         gio,
         glib::{self, clone, Object},
         prelude::*,
+        StyleContext,
         subclass::prelude::*,
     },
     std::path::PathBuf,
@@ -146,8 +149,28 @@ impl OxWindow {
         }
     }
 
+    pub fn set_css(&self) {
+        let bg = {
+            let cfg = CONFIG.try_lock();
+            if let Ok(cfg) = cfg {
+                cfg.background.clone()
+            } else {
+                Background::default()
+            }
+        };
+        let css = bg.as_css();
+        let provider = CssProvider::new();
+        provider.load_from_data(css.as_bytes());
+        StyleContext::add_provider_for_display(
+            &Display::default().expect("Cannot get display"),
+            &provider,
+            gtk::STYLE_PROVIDER_PRIORITY_APPLICATION
+        );
+    }
+
     pub fn apply_config(&self) {
         self.set_oxwindow_title();
+        self.set_css();
         if let Ok(cfg) = CONFIG.try_lock() {
             self.imp()
                 .notebook
