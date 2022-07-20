@@ -6,7 +6,7 @@ mod palette_page;
 mod text_page;
 
 use {
-    crate::{config::Config, OxWindow, Values, CONFIG},
+    crate::{config::{AsCss, Config}, OxWindow, Values, CONFIG},
     gtk::{
         glib::{self, clone, Object},
         prelude::*,
@@ -39,6 +39,8 @@ pub fn run(window: &OxWindow) {
     dlg.connect_response(clone!(@weak window => move |dlg, res| {
         if res == gtk::ResponseType::Accept {
             let cfg = dlg.values();
+            let css = cfg.background.as_css();
+            println!("CSS: {css}");
             if let Err(e) = cfg.save() {
                 eprintln!("Error saving config: {e}");
             }

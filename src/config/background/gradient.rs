@@ -1,9 +1,14 @@
 use {
+    super::AsCss,
     crate::config::Color,
     rgba_simple::{PrimaryColor, RGBA},
     serde::{Deserialize, Serialize},
-    std::{cmp::Ordering, error::Error, fmt::{self, Write}, str::FromStr},
-    super::AsCss,
+    std::{
+        cmp::Ordering,
+        error::Error,
+        fmt::{self, Write},
+        str::FromStr,
+    },
 };
 
 #[derive(Clone, Debug, Default, Deserialize, PartialEq, Serialize)]
@@ -191,39 +196,38 @@ impl AsCss<std::string::String> for Vec<Stop> {
 
 impl AsCss<std::string::String> for Gradient {
     fn as_css(&self) -> std::string::String {
-        let mut css = String::from(".workview stack {{\n    background-image: ");
+        let mut css = String::from(".workview stack {\n    background-image: ");
         let bsize = "    background-size: 100% 100%;";
         match &self.kind {
-            Kind::Linear(direction) => {
-                match direction {
-                    Direction::Angle(angle) => {
+            Kind::Linear(direction) => match direction {
+                Direction::Angle(angle) => {
+                    let _result = write!(
+                        css,
+                        "linear-gradient({}deg{});\n{}\n}}",
+                        angle.round(),
+                        self.stops.as_css(),
+                        bsize,
+                    );
+                }
+                Direction::Edge(position) => {
+                    if position.horizontal == HorizontalPlacement::Center
+                        && position.vertical == VerticalPlacement::Center
+                    {
                         let _result = write!(
                             css,
-                            "linear-gradient({}deg{});\n{}\n}}",
-                            angle.round(),
+                            "linear-gradient(to bottom right{});\n{}\n}}",
                             self.stops.as_css(),
                             bsize,
                         );
-                    },
-                    Direction::Edge(position) => {
-                        if position.horizontal == HorizontalPlacement::Center &&
-                            position.vertical == VerticalPlacement::Center {
-                            let _result = write!(
-                                css,
-                                "linear-gradient(to bottom right{});\n{}\n}}",
-                                self.stops.as_css(),
-                                bsize,
-                            );
-                        } else {
-                            let _result = write!(
-                                css,
-                                "linear-gradient(to {}{});\n{}\n}}",
-                                position.as_css(),
-                                self.stops.as_css(),
-                                bsize,
-                            );
-                        }
-                    },
+                    } else {
+                        let _result = write!(
+                            css,
+                            "linear-gradient(to {}{});\n{}\n}}",
+                            position.as_css(),
+                            self.stops.as_css(),
+                            bsize,
+                        );
+                    }
                 }
             },
             Kind::Radial(position) => {
@@ -234,7 +238,7 @@ impl AsCss<std::string::String> for Gradient {
                     self.stops.as_css(),
                     bsize,
                 );
-            },
+            }
             Kind::Elliptical(position) => {
                 let _result = write!(
                     css,
@@ -243,7 +247,7 @@ impl AsCss<std::string::String> for Gradient {
                     self.stops.as_css(),
                     bsize,
                 );
-            },
+            }
         }
         css
     }

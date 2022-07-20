@@ -112,6 +112,7 @@
                 <child>
                   <object class="GtkSpinButton" id="degrees">
                     <property name="tooltip-text" translatable="yes">The angle the gradient travels away from it's starting location.</property>
+		    <property name="adjustment">degrees_adjustment</property>
                     <property name="halign">fill</property>
                     <property name="hexpand">True</property>
                   </object>

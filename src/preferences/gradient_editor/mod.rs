@@ -203,6 +203,10 @@ impl Values<Gradient> for GradientEditor {
                 kind: GradientKind::Radial(self.placement()),
                 stops: self.stops(),
             },
+            "elliptical" => Gradient {
+                kind: GradientKind::Elliptical(self.placement()),
+                stops: self.stops(),
+            },
             _ => Gradient {
                 kind: GradientKind::default(),
                 stops: self.stops(),

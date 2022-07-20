@@ -76,14 +76,3 @@ impl FromStr for Style {
         }
     }
 }
-
-impl AsCss<std::string::String> for Image {
-    fn as_css(&self) -> std::string::String {
-        format!(
-            ".workview stack {{\n    \
-            background-image: url(\"{}\");\n{}",
-            self.file.display(),
-            self.style.as_css(),
-        )
-    }
-}

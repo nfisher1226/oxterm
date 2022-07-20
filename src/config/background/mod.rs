@@ -1,3 +1,5 @@
+use core::fmt;
+
 use {
     super::Color,
     crate::CONFIG,
@@ -41,16 +43,40 @@ impl Default for Background {
     }
 }
 
-pub trait AsCss<T> 
-where T: Display + ToString {
+pub trait AsCss<T>
+where
+    T: Display + ToString,
+{
     fn as_css(&self) -> T;
+}
+
+impl AsCss<std::string::String> for Background {
+    fn as_css(&self) -> std::string::String {
+        match self {
+            Self::SolidColor(bc) => format!(
+                ".workview stack {{\n    {bc}\n    background-size: 100% 100%;\n}}"
+            ),
+            Self::Image(img) => format!(
+                ".workview stack {{\n    background-image: url(\"{}\");\n{}}}",
+                img.file.display(),
+                img.style.as_css(),
+            ),
+            Self::Gradient(g) => g.as_css(),
+        }
+    }
 }
 
 impl AsCss<std::string::String> for Color {
     fn as_css(&self) -> std::string::String {
         format!(
-            ".workview stack {{\n    background-color: {};\n    background-size: 100% 100%;\n}}",
+            ".workview stack {{\n    {}\n    background-size: 100% 100%;\n}}",
             self,
         )
+    }
+}
+
+impl fmt::Display for BackgroundColor {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", Color::from(*self))
     }
 }

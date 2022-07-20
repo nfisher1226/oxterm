@@ -15,7 +15,7 @@ pub use {
             VerticalPlacement,
         },
         image::{Image, Style as ImageStyle},
-        Background, BackgroundColor, Gradient,
+        AsCss, Background, BackgroundColor, Gradient,
     },
     cursor::{Cursor, CursorStyle},
     dynamic_title_style::DynamicTitleStyle,
