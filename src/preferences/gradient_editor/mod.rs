@@ -150,13 +150,21 @@ impl GradientEditor {
 
     pub fn set_stops(&self, stops: &[Stop]) {
         {
-            self.imp().stops.borrow_mut().drain();
+            let mut s = self.imp().stops.borrow_mut();
+            for stop in s.values() {
+                self.imp().stops_stack.remove(stop);
+            }
+            s.drain();
         }
         self.imp().stop_selector.remove_all();
+        self.imp().num_stops.set_value(stops.len() as f64);
         for s in stops {
             let stop_editor = StopEditor::new_with_stop(s);
             let name = stop_editor.widget_name().to_string();
+            let _page = self.imp().stops_stack.add_named(&stop_editor, Some(&name));
+            self.imp().stops_stack.set_visible_child_name(&name);
             self.imp().stop_selector.append(Some(&name), &name);
+            self.imp().stop_selector.set_active_id(Some(&name));
             self.imp().stops.borrow_mut().insert(name, stop_editor);
         }
     }
@@ -165,11 +173,11 @@ impl GradientEditor {
         let stop_editor = StopEditor::new();
         let name = stop_editor.widget_name().to_string();
         let _page = self.imp().stops_stack.add_named(&stop_editor, Some(&name));
+        self.imp().stop_selector.append(Some(&name), &name);
         self.imp()
             .stops
             .borrow_mut()
-            .insert(stop_editor.widget_name().to_string(), stop_editor.clone());
-        self.imp().stop_selector.append(Some(&name), &name);
+            .insert(name, stop_editor.clone());
         stop_editor
     }
 
