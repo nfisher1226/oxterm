@@ -28,16 +28,18 @@ impl StopEditor {
     #[must_use]
     pub fn new() -> Self {
         let name: String = format!(
-            "stop_{}",
+            "{}",
             std::iter::repeat_with(fastrand::alphanumeric)
                 .take(8)
                 .collect::<String>()
         );
-        Object::new(&[
+        let obj: Self = Object::new(&[
             ("orientation", &gtk::Orientation::Horizontal),
             ("name", &name),
         ])
-        .expect("Cannot create tab label")
+        .expect("Cannot create tab label");
+        obj.imp().label.set_label(&name);
+        obj
     }
 
     pub fn new_with_stop(stop: &Stop) -> Self {
@@ -62,6 +64,10 @@ impl StopEditor {
 
     pub fn set_position(&self, position: f64) {
         self.imp().scale.set_value(position);
+    }
+
+    pub fn set_button_visible(&self, visible: bool) {
+        self.imp().label.imp().button.set_visible(visible);
     }
 }
 

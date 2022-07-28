@@ -1,12 +1,10 @@
 use {
-    super::stop_editor::StopEditor,
     gtk::{
         glib::{self, clone, subclass::InitializingObject},
         prelude::*,
         subclass::prelude::*,
         CompositeTemplate,
     },
-    std::{cell::RefCell, collections::HashMap},
 };
 
 #[derive(CompositeTemplate, Default)]
@@ -27,12 +25,9 @@ pub struct GradientEditor {
     #[template_child]
     pub horizontal_position: TemplateChild<gtk::ComboBoxText>,
     #[template_child]
-    pub num_stops: TemplateChild<gtk::SpinButton>,
+    pub stops_notebook: TemplateChild<gtk::Notebook>,
     #[template_child]
-    pub stop_selector: TemplateChild<gtk::ComboBoxText>,
-    #[template_child]
-    pub stops_stack: TemplateChild<gtk::Stack>,
-    pub stops: RefCell<HashMap<String, StopEditor>>,
+    pub new_stop_button: TemplateChild<gtk::Button>,
 }
 
 #[glib::object_subclass]
@@ -80,13 +75,6 @@ impl ObjectImpl for GradientEditor {
         self.direction_type.connect_changed(
             clone!(@strong self.direction_stack as stack => move |dtype| {
                 if let Some(name) = dtype.active_id() {
-                    stack.set_visible_child_name(name.as_str());
-                }
-            }),
-        );
-        self.stop_selector.connect_changed(
-            clone!(@strong self.stops_stack as stack => move |sel| {
-                if let Some(name) = sel.active_id() {
                     stack.set_visible_child_name(name.as_str());
                 }
             }),

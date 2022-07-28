@@ -1,10 +1,8 @@
-use core::fmt;
-
 use {
     super::Color,
     crate::CONFIG,
     serde::{Deserialize, Serialize},
-    std::{fmt::Display, string::ToString},
+    std::{fmt::{self, Display}, string::ToString},
 };
 
 pub mod gradient;
@@ -53,9 +51,9 @@ where
 impl AsCss<std::string::String> for Background {
     fn as_css(&self) -> std::string::String {
         match self {
-            Self::SolidColor(bc) => format!(
-                ".workview stack {{\n    {bc}\n    background-size: 100% 100%;\n}}"
-            ),
+            Self::SolidColor(bc) => {
+                format!(".workview stack {{\n    {bc}\n    background-size: 100% 100%;\n}}")
+            }
             Self::Image(img) => format!(
                 ".workview stack {{\n    background-image: url(\"{}\");\n{}}}",
                 img.file.display(),

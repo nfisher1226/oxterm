@@ -9,11 +9,25 @@
   </object>
   <template class="StopEditor" parent="GtkBox">
     <property name="orientation">horizontal</property>
-    <property name="spacing">5</property>
+    <property name="spacing">10</property>
     <property name="halign">fill</property>
     <property name="hexpand">True</property>
+    <property name="margin-start">10</property>
+    <property name="margin-end">10</property>
+    <property name="margin-top">10</property>
+    <property name="margin-bottom">10</property>
+    <child>
+      <object class="GtkLabel">
+        <property name="label">Color:</property>
+      </object>
+    </child>
     <child>
       <object class="GtkColorButton" id="button">
+      </object>
+    </child>
+    <child>
+      <object class="GtkLabel">
+        <property name="label">Position:</property>
       </object>
     </child>
     <child>

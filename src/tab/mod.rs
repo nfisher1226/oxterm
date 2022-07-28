@@ -99,6 +99,7 @@ impl Tab {
             cn,
             None,
         );
+        term.set_css_classes(&["terminal"]);
         term.connect_has_focus_notify(clone!(@weak self as tab => move |term| {
             *tab.imp().current_term.borrow_mut() = Some(term.widget_name().to_string());
             if let Some(window) = tab.root() {

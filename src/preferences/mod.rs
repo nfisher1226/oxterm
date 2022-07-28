@@ -6,7 +6,7 @@ mod palette_page;
 mod text_page;
 
 use {
-    crate::{config::{AsCss, Config}, OxWindow, Values, CONFIG},
+    crate::{config::Config, OxWindow, Values, CONFIG},
     gtk::{
         glib::{self, clone, Object},
         prelude::*,
@@ -43,7 +43,11 @@ pub fn run(window: &OxWindow) {
                 eprintln!("Error saving config: {e}");
             }
             *CONFIG.try_lock().unwrap() = cfg;
-            window.apply_config();
+            if let Some(windows) = window.all_windows() {
+                for w in windows {
+                    w.apply_config();
+                }
+            }
         }
         dlg.close();
     }));

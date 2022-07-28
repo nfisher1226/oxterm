@@ -14,7 +14,6 @@ use {
         prelude::*,
         subclass::prelude::*,
     },
-    rgba_simple::PrimaryColor,
     stop_editor::StopEditor,
 };
 
@@ -35,25 +34,27 @@ impl GradientEditor {
     #[must_use]
     pub fn new() -> Self {
         let obj: Self = Object::new(&[]).expect("Cannot create gradient editor");
-        let imp = obj.imp();
-        let stop = obj.append_stop();
-        stop.set_values(&Stop::new(PrimaryColor::Black.into(), Stop::MIN_POSITION));
-        imp.stop_selector
-            .set_active_id(Some(stop.widget_name().as_str()));
-        let stop = obj.append_stop();
-        stop.set_values(&Stop::new(PrimaryColor::White.into(), Stop::MAX_POSITION));
-        imp.num_stops
-            .connect_value_changed(clone!(@strong obj as editor => move |ns| {
-                let old = { editor.imp().stops.borrow().values().len() };
-                let new = ns.value();
-                if new > old as f64 {
-                    let _stop = editor.append_stop();
-                } else if new < old as f64 {
-                    if let Some(name) = editor.imp().stop_selector.active_id() {
-                        editor.remove_stop(name.as_str());
-                    }
-                }
-            }));
+        obj.imp().new_stop_button.connect_clicked(clone!(@weak obj => move |_| {
+            obj.append_stop();
+        }));
+        obj.imp().stops_notebook.connect_page_added(move |nb,_child,_num| {
+            for n in 0..nb.n_pages() {
+                nb.nth_page(Some(n))
+                    .unwrap()
+                    .downcast::<StopEditor>()
+                    .unwrap()
+                    .set_button_visible(nb.n_pages() > 2);
+            }
+        });
+        obj.imp().stops_notebook.connect_page_removed(move |nb,_child,_num| {
+            for n in 0..nb.n_pages() {
+                nb.nth_page(Some(n))
+                    .unwrap()
+                    .downcast::<StopEditor>()
+                    .unwrap()
+                    .set_button_visible(nb.n_pages() > 2);
+            }
+        });
         obj
     }
 
@@ -137,60 +138,52 @@ impl GradientEditor {
     }
 
     pub fn stops(&self) -> Vec<Stop> {
-        let mut stops = self
-            .imp()
-            .stops
-            .borrow()
-            .values()
-            .map(Values::values)
-            .collect::<Vec<Stop>>();
+        let mut stops: Vec<Stop> = vec![];
+        for n in 0..self.imp().stops_notebook.n_pages() {
+            stops.push(
+                self.imp()
+                    .stops_notebook
+                    .nth_page(Some(n))
+                    .unwrap()
+                    .downcast::<StopEditor>()
+                    .unwrap()
+                    .values(),
+            );
+        }
         stops.sort_by(|a, b| a.partial_cmp(b).unwrap());
         stops
     }
 
     pub fn set_stops(&self, stops: &[Stop]) {
-        {
-            let mut s = self.imp().stops.borrow_mut();
-            for stop in s.values() {
-                self.imp().stops_stack.remove(stop);
-            }
-            s.drain();
-        }
-        self.imp().stop_selector.remove_all();
-        self.imp().num_stops.set_value(stops.len() as f64);
-        for s in stops {
+        let mut stops: Vec<&Stop> = stops.iter().collect();
+        stops.sort_by(|a, b| a.partial_cmp(b).unwrap());
+        for s in &stops {
             let stop_editor = StopEditor::new_with_stop(s);
-            let name = stop_editor.widget_name().to_string();
-            let _page = self.imp().stops_stack.add_named(&stop_editor, Some(&name));
-            self.imp().stops_stack.set_visible_child_name(&name);
-            self.imp().stop_selector.append(Some(&name), &name);
-            self.imp().stop_selector.set_active_id(Some(&name));
-            self.imp().stops.borrow_mut().insert(name, stop_editor);
+            stop_editor.imp().label.imp().button.set_visible(stops.len() > 2);
+            self.imp()
+                .stops_notebook
+                .append_page(&stop_editor, Some(&stop_editor.imp().label));
+            let nb = self.imp().stops_notebook.clone();
+            stop_editor.imp().label.imp().button.connect_clicked(
+                clone!(@weak stop_editor => move |_| {
+                    nb.remove_page(nb.page_num(&stop_editor));
+                }),
+            );
         }
     }
 
     pub fn append_stop(&self) -> StopEditor {
         let stop_editor = StopEditor::new();
-        let name = stop_editor.widget_name().to_string();
-        let _page = self.imp().stops_stack.add_named(&stop_editor, Some(&name));
-        self.imp().stop_selector.append(Some(&name), &name);
         self.imp()
-            .stops
-            .borrow_mut()
-            .insert(name, stop_editor.clone());
+            .stops_notebook
+            .append_page(&stop_editor, Some(&stop_editor.imp().label));
+        let nb = self.imp().stops_notebook.clone();
+        stop_editor.imp().label.imp().button.connect_clicked(
+            clone!(@weak stop_editor => move |_| {
+                nb.remove_page(nb.page_num(&stop_editor));
+            }),
+        );
         stop_editor
-    }
-
-    pub fn remove_stop(&self, id: &str) {
-        let imp = self.imp();
-        let stop = { imp.stops.borrow_mut().remove(id) };
-        if let Some(stop) = stop {
-            imp.stops_stack.remove(&stop);
-            imp.stop_selector.remove_all();
-            for name in imp.stops.borrow().keys() {
-                imp.stop_selector.append(Some(name), name);
-            }
-        }
     }
 }
 

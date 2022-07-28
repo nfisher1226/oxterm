@@ -1,8 +1,11 @@
-use gtk::{
-    glib::{self, subclass::InitializingObject},
-    prelude::*,
-    subclass::prelude::*,
-    CompositeTemplate,
+use {
+    crate::TabLabel,
+    gtk::{
+        glib::{self, subclass::InitializingObject},
+        prelude::*,
+        subclass::prelude::*,
+        CompositeTemplate,
+    },
 };
 
 #[derive(CompositeTemplate, Default)]
@@ -12,6 +15,7 @@ pub struct StopEditor {
     pub button: TemplateChild<gtk::ColorButton>,
     #[template_child]
     pub scale: TemplateChild<gtk::SpinButton>,
+    pub label: TabLabel,
 }
 
 #[glib::object_subclass]
@@ -32,6 +36,7 @@ impl ObjectSubclass for StopEditor {
 impl ObjectImpl for StopEditor {
     fn constructed(&self, obj: &Self::Type) {
         self.parent_constructed(obj);
+        self.label.set_halign(gtk::Align::Start);
     }
 }
 

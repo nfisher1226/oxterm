@@ -3,15 +3,17 @@ use crate::config::Background;
 mod imp;
 
 use {
-    crate::{config::{AsCss, DynamicTitleStyle}, Tab, CONFIG},
+    crate::{
+        config::{AsCss, DynamicTitleStyle},
+        Tab, CONFIG,
+    },
     gtk::{
-        CssProvider,
         gdk::Display,
         gio,
         glib::{self, clone, Object},
         prelude::*,
-        StyleContext,
         subclass::prelude::*,
+        CssProvider, StyleContext,
     },
     std::path::PathBuf,
     vte::TerminalExt,
@@ -164,7 +166,7 @@ impl OxWindow {
         StyleContext::add_provider_for_display(
             &Display::default().expect("Cannot get display"),
             &provider,
-            gtk::STYLE_PROVIDER_PRIORITY_APPLICATION
+            gtk::STYLE_PROVIDER_PRIORITY_APPLICATION,
         );
     }
 
@@ -182,6 +184,20 @@ impl OxWindow {
                     tab.apply_config();
                 }
             }
+        }
+    }
+
+    pub fn all_windows(&self) -> Option<Vec<Self>> {
+        if let Some(app) = self.application() {
+            let mut windows: Vec<OxWindow> = vec![];
+            for window in app.windows() {
+                if let Ok(w) = window.downcast::<OxWindow>() {
+                    windows.push(w);
+                }
+            }
+            Some(windows)
+        } else {
+            None
         }
     }
 }
