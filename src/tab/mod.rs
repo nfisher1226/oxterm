@@ -1,11 +1,9 @@
-use crate::OxWindow;
-
 mod imp;
 
 use {
     crate::{
         config::{Background, BackgroundColor, Scrollback, TextColor},
-        TabLabel, CONFIG, SHELL,
+        OxWindow, TabLabel, CONFIG, SHELL,
     },
     gtk::{
         gio::Cancellable,
@@ -21,6 +19,12 @@ use {
     },
     vte::{PtyFlags, Terminal, TerminalExt, TerminalExtManual},
 };
+
+#[cfg(target_pointer_width = "64")]
+type PwidthInt = i64;
+
+#[cfg(target_pointer_width = "32")]
+type PwidthInt = i32;
 
 glib::wrapper! {
     pub struct Tab(ObjectSubclass<imp::Tab>)
@@ -336,7 +340,7 @@ impl Tab {
                     vte::CursorBlinkMode::Off
                 });
                 term.set_scrollback_lines(match cfg.text.scrollback {
-                    Scrollback::Finite(num) => num as i64,
+                    Scrollback::Finite(num) => num as PwidthInt,
                     Scrollback::Infinite => -1,
                 });
                 term.set_colors(
